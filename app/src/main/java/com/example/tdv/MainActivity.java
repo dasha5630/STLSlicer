@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.tdv;
 
 import android.content.*;
 import android.database.Cursor;
@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import java.io.*;
-
+import java.io.*;
 import android.app.Activity;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tdv.R;
 
 public class MainActivity extends Activity {
 
