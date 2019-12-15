@@ -1,21 +1,24 @@
 package com.example.tdv;
 
 import android.content.*;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
 import java.io.*;
-import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import android.app.Activity;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tdv.R;
+import com.example.tdv.slicing.Point;
+import com.example.tdv.slicing.Triangle;
 
 public class MainActivity extends Activity {
 
@@ -23,7 +26,9 @@ public class MainActivity extends Activity {
 
     String FILENAME = "file";
 
+    float numberOfTriangle = 0;
 
+    AbstractList<Triangle> list = new ArrayList<Triangle>();
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,9 +51,8 @@ public class MainActivity extends Activity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                String importfilepath = name;
                 FILENAME = (String) name;
-                InputStreamToFile(input, importfilepath);
+                ParseInputStream(input);
         }
     }
     public void onclick(View v) {
@@ -60,51 +64,79 @@ public class MainActivity extends Activity {
         }
     }
 
-    void readFile() {
-        try {
-            // открываем поток для чтения
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    openFileInput(FILENAME)));
-            String str = "";
-            // читаем содержимое
-            while ((str = br.readLine()) != null) {
-                Log.d(LOG_TAG, str);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private void ParseInputStream(InputStream in) {
+/*        float fl = 0;
+        int i = 0;*/
 
-    private String getContentName(ContentResolver resolver, Uri uri){
-        Cursor cursor = resolver.query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int nameIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-        if (nameIndex >= 0) {
-            return cursor.getString(nameIndex);
-        } else {
-            return null;
-        }
-    }
-
-    private void InputStreamToFile(InputStream in, String file) {
 
         try {
-            OutputStream out = new FileOutputStream(new File(file));
-
-            int size = 0;
-            byte[] buffer = new byte[1024];
-
-            while ((size = in.read(buffer)) != -1) {
-                out.write(buffer, 0, size);
+            byte[] buff = new byte[4];
+            byte element = 0;
+            int cntr = -1;
+            //DataInputStream dis = new DataInputStream(in);
+            in.skip(84);
+            while ((in.read(buff)) != -1){
+                Float fl = ByteBuffer.wrap(buff).getFloat();
             }
+/*            in.skip(84);
+            int element = 0;
+            while ((element = in.read()) != -1){
+                fl = element << 8*i;
+                i++;
+                if(i >= 5){
+                    i = 0;
+                }
 
-            out.close();
+            }*/
+/*            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            reader.skip(80);
+            in.skip(80);
+            Scanner scanner = new Scanner(in);
+            Point point = new Point();
+            Point point1 = new Point();
+            Point point2 = new Point();
+            Point point3 = new Point();
+            int counter = 0;
+            scanner.hasNextFloat();
+            numberOfTriangle = scanner.nextByte();
+            scanner.hasNextFloat();
+            numberOfTriangle = (scanner.nextByte() << 8);
+            while (scanner.hasNextFloat()) {
+                if(counter == 0)
+                    point.setX(scanner.nextFloat());
+                if(counter == 1)
+                    point.setY(scanner.nextFloat());
+                if(counter == 2)
+                    point.setZ(scanner.nextFloat());
+                if(counter == 3)
+                    point1.setX(scanner.nextFloat());
+                if(counter == 4)
+                    point1.setY(scanner.nextFloat());
+                if(counter == 5)
+                    point1.setZ(scanner.nextFloat());
+                if(counter == 6)
+                    point2.setX(scanner.nextFloat());
+                if(counter == 7)
+                    point2.setY(scanner.nextFloat());
+                if(counter == 8)
+                    point2.setZ(scanner.nextFloat());
+                if(counter == 9)
+                    point3.setX(scanner.nextFloat());
+                if(counter == 10)
+                    point3.setY(scanner.nextFloat());
+                if(counter == 11){
+                    point3.setZ(scanner.nextFloat());
+                    counter = 0;
+                    list.add(new Triangle(point, point1, point2, point3));
+                }
+                counter++;
+            }*/
         }
         catch (Exception e) {
-            Log.e("MainActivity", "InputStreamToFile exception: " + e.getMessage());
+            Log.e("MainActivity", "ParseInputStream exception: " + e.getMessage());
         }
+
+
     }
 
     public void openText(View view){
@@ -119,7 +151,6 @@ public class MainActivity extends Activity {
             textView.setText(text);
         }
         catch(IOException ex) {
-
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
         finally{
@@ -129,7 +160,6 @@ public class MainActivity extends Activity {
                     fin.close();
             }
             catch(IOException ex){
-
                 Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
