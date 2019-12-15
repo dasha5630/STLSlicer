@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -73,10 +74,20 @@ public class MainActivity extends Activity {
             byte[] buff = new byte[4];
             byte element = 0;
             int cntr = -1;
+            Float fl = 0f;
+            ByteBuffer bf;
             //DataInputStream dis = new DataInputStream(in);
-            in.skip(84);
+            in.skip(80);
             while ((in.read(buff)) != -1){
-                Float fl = ByteBuffer.wrap(buff).getFloat();
+                bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
+                fl = bf.getFloat();
+                fl.byteValue();
+
+                if(cntr == -1){
+                    numberOfTriangle = fl;
+                }
+                
+
             }
 /*            in.skip(84);
             int element = 0;
