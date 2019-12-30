@@ -7,8 +7,8 @@ public class Triangle {
     private Point second;
     private Point third;
 
-    public Triangle(Point normal, Point first, Point second, Point third) {
-        this.normal = normal;
+    public Triangle(Point first, Point second, Point third) {
+        this.normal = null;
         this.first = first;
         this.second = second;
         this.third = third;

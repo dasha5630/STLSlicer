@@ -1,6 +1,10 @@
 package com.example.tdv;
 
 import android.content.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,6 +13,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 import android.app.Activity;
@@ -29,12 +36,17 @@ public class MainActivity extends Activity {
 
     float numberOfTriangle = 0;
 
-    AbstractList<Triangle> list = new ArrayList<Triangle>();
+    boolean flag = false;
+
+    View dv;
+    List<Triangle> list = new ArrayList<>();
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        dv = new DrawView(this);
+        setContentView(dv);// setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -69,6 +81,9 @@ public class MainActivity extends Activity {
 /*        float fl = 0;
         int i = 0;*/
 
+        Point point1 = new Point();
+        Point point2 = new Point();
+        Point point3 = new Point();
 
         try {
             byte[] buff = new byte[4];
@@ -78,15 +93,61 @@ public class MainActivity extends Activity {
             ByteBuffer bf;
             //DataInputStream dis = new DataInputStream(in);
             in.skip(80);
-            while ((in.read(buff)) != -1){
+            while (cntr < 10){//while ((in.read(buff)) != -1){
+                in.read(buff);
                 bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
                 fl = bf.getFloat();
-                fl.byteValue();
+                cntr++;
+                switch (cntr){
+                    case 0:
+                        numberOfTriangle = fl;
+                        break;
 
-                if(cntr == -1){
-                    numberOfTriangle = fl;
+                    case 1:
+                        in.skip(12);
+                        point1.setX(fl);
+                        break;
+
+                    case 2:
+                        point1.setY(fl);
+                        break;
+                    case 3:
+                        point1.setZ(fl);
+                        break;
+
+                    case 4:
+                        point2.setX(fl);
+                        break;
+
+                    case 5:
+                        point2.setY(fl);
+                        break;
+                    case 6:
+                        point2.setZ(fl);
+                        break;
+
+                    case 7:
+                        point3.setX(fl);
+                        break;
+
+                    case 8:
+                        point3.setY(fl);
+                        break;
+
+                    case 9:
+                        point3.setZ(fl);
+                        list.add(new Triangle(point1, point2, point3));
+                        flag = true;
+                        in.skip(2);
+                        in.close();
+                        return;
+                        //break;
+
+                    default:
+                        break;
                 }
-                
+
+
 
             }
 /*            in.skip(84);
@@ -174,5 +235,46 @@ public class MainActivity extends Activity {
                 Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    class DrawView extends View {
+
+        Paint p;
+        Rect rect;
+
+        public DrawView(Context context) {
+            super(context);
+            p = new Paint();
+            rect = new Rect();
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            // заливка канвы цветом
+            canvas.drawARGB(80, 102, 204, 255);
+            // настройка кисти
+            // красный цвет
+            p.setColor(Color.RED);
+            // толщина линии = 10
+            p.setStrokeWidth(10);
+
+            if(flag){
+                for (Triangle it:list){
+                    float x1 = it.getFirst().getX();
+                    float y1 = it.getFirst().getY();
+                    float x2 = it.getSecond().getX();
+                    float y2 = it.getSecond().getY();
+                   // canvas.drawPoint(it.next().getFirst().getX(), it.next().getFirst().getY(), p);
+                   canvas.drawLine(x1*100,y1*100,x2*100,y2*100,p);
+
+                }
+
+                dv.invalidate();
+                //flag = false;
+
+            }
+
+        }
+
     }
 }

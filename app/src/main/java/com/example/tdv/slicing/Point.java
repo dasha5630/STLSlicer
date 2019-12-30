@@ -2,11 +2,11 @@ package com.example.tdv.slicing;
 
 public class Point {
 
-    private double x;
-    private double y;
-    private double z;
+    private float x;
+    private float y;
+    private float z;
 
-    public Point(double x, double y, double z) {
+    public Point(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -16,27 +16,27 @@ public class Point {
 
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public double getZ() {
+    public float getZ() {
         return z;
     }
 
-    public void setX(double x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public void setY(double y) {
+    public void setY(float y) {
         this.y = y;
     }
 
-    public void setZ(double z) {
+    public void setZ(float z) {
         this.z = z;
     }
 }
