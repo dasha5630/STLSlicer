@@ -13,6 +13,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -39,7 +41,7 @@ public class MainActivity extends Activity {
     boolean flag = false;
 
     View dv;
-    List<Triangle> list = new ArrayList<>();
+    ArrayList<Triangle> list = new ArrayList<Triangle>();
 
     /** Called when the activity is first created. */
     @Override
@@ -88,23 +90,27 @@ public class MainActivity extends Activity {
         try {
             byte[] buff = new byte[4];
             byte element = 0;
-            int cntr = -1;
+            int cntr = 0;
             Float fl = 0f;
             ByteBuffer bf;
             //DataInputStream dis = new DataInputStream(in);
             in.skip(80);
-            while (cntr < 10){//while ((in.read(buff)) != -1){
-                in.read(buff);
+
+            in.read(buff);
+            bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
+            fl = bf.getFloat();
+            fl.byteValue();
+            numberOfTriangle = fl;
+
+
+            in.skip(12);
+            while ((in.read(buff)) != -1){
                 bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
                 fl = bf.getFloat();
+                fl.byteValue();
                 cntr++;
                 switch (cntr){
-                    case 0:
-                        numberOfTriangle = fl;
-                        break;
-
                     case 1:
-                        in.skip(12);
                         point1.setX(fl);
                         break;
 
@@ -138,10 +144,9 @@ public class MainActivity extends Activity {
                         point3.setZ(fl);
                         list.add(new Triangle(point1, point2, point3));
                         flag = true;
-                        in.skip(2);
-                        in.close();
-                        return;
-                        //break;
+                        in.skip(14);
+                        cntr = 0;
+                        break;
 
                     default:
                         break;
@@ -149,6 +154,9 @@ public class MainActivity extends Activity {
 
 
 
+            }
+            if(!list.isEmpty()){
+                Collections.sort(list);
             }
 /*            in.skip(84);
             int element = 0;
