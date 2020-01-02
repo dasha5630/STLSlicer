@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
     private void ParseInputStream(InputStream in) {
 /*        float fl = 0;
         int i = 0;*/
-
+        long test = 0;
         Point point1 = new Point();
         Point point2 = new Point();
         Point point3 = new Point();
@@ -94,13 +94,11 @@ public class MainActivity extends Activity {
             Float fl = 0f;
             ByteBuffer bf;
             //DataInputStream dis = new DataInputStream(in);
-            in.skip(80);
+            test = in.skip(80);
 
-            in.read(buff);
+            test = in.read(buff);
             bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
-            fl = bf.getFloat();
-            fl.byteValue();
-            numberOfTriangle = fl;
+            numberOfTriangle = bf.getInt();
 
 
             in.skip(12);
