@@ -1,6 +1,8 @@
 package com.example.tdv.slicing;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Triangle implements Comparable{
 
@@ -8,8 +10,9 @@ public class Triangle implements Comparable{
     private Point first;
     private Point second;
     private Point third;
-    private float []Zarray;
+    private ArrayList<Point> ZToHigh = new ArrayList<>();
     private float Zmin;
+    private float Z2;
     private float Zmax;
 
     public Triangle(Point first, Point second, Point third) {
@@ -17,10 +20,10 @@ public class Triangle implements Comparable{
         this.first = first;
         this.second = second;
         this.third = third;
-        this.Zarray = new float[]{this.first.getZ(), this.second.getZ(), this.third.getZ()};
-        //Arrays.sort(Zarray);
-        this.Zmax = Zarray[2];
-        this.Zmin = Zarray[0];
+        ZToHigh.add(this.first);
+        ZToHigh.add(this.second);
+        ZToHigh.add(this.third);
+        Collections.sort(ZToHigh);
     }
 
     public Triangle(){
@@ -49,6 +52,26 @@ public class Triangle implements Comparable{
 
     public void setThird(Point third) {
         this.third = third;
+    }
+
+    public Point getNormal() {
+        return normal;
+    }
+
+    public ArrayList<Point> getZToHigh() {
+        return ZToHigh;
+    }
+
+    public float getZmin() {
+        return Zmin;
+    }
+
+    public float getZmax() {
+        return Zmax;
+    }
+
+    public float getZ2() {
+        return Z2;
     }
 
     @Override

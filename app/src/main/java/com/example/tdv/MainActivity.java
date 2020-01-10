@@ -42,6 +42,14 @@ public class MainActivity extends Activity {
 
     View dv;
     ArrayList<Triangle> list = new ArrayList<Triangle>();
+    ArrayList<Triangle> activeTriangleList = new ArrayList<>();
+    ArrayList<Point> points = new ArrayList<>();
+
+   // Iterator<Triangle> it = list.iterator();
+
+    Float step;
+
+    Float currentZ = 0.2f;
 
     /** Called when the activity is first created. */
     @Override
@@ -99,8 +107,6 @@ public class MainActivity extends Activity {
             test = in.read(buff);
             bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
             numberOfTriangle = bf.getInt();
-
-
             in.skip(12);
             while ((in.read(buff)) != -1){
                 bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
@@ -141,7 +147,7 @@ public class MainActivity extends Activity {
                     case 9:
                         point3.setZ(fl);
                         list.add(new Triangle(point1, point2, point3));
-                        flag = true;
+
                         in.skip(14);
                         cntr = 0;
                         break;
@@ -149,14 +155,14 @@ public class MainActivity extends Activity {
                     default:
                         break;
                 }
-
-
-
             }
+
             if(!list.isEmpty()){
+                flag = true;
                 Collections.sort(list);
+                dv.invalidate();
             }
-/*            in.skip(84);
+            /*            in.skip(84);
             int element = 0;
             while ((element = in.read()) != -1){
                 fl = element << 8*i;
@@ -256,6 +262,10 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onDraw(Canvas canvas) {
+
+            float x = 0;
+            float y = 0;
+            float z = 0;
             // заливка канвы цветом
             canvas.drawARGB(80, 102, 204, 255);
             // настройка кисти
@@ -264,8 +274,96 @@ public class MainActivity extends Activity {
             // толщина линии = 10
             p.setStrokeWidth(10);
 
+
             if(flag){
-                for (Triangle it:list){
+                for(Triangle it:list){
+                    if(it.getZToHigh().get(0).getZ() <= currentZ) {
+                        if (it.getZToHigh().get(2).getZ() >= currentZ) {
+                            activeTriangleList.add(it);
+                        } else {
+                            if(activeTriangleList.contains(it))
+                                activeTriangleList.remove(it);
+                        }
+                    }
+                }
+
+                if(!activeTriangleList.isEmpty()){
+                    for (Triangle it:activeTriangleList) {
+                        float x1 = it.getZToHigh().get(2).getX();
+                        float y1 = it.getZToHigh().get(2).getY();
+                        float z1 = it.getZToHigh().get(2).getY();
+
+                        float x2 = it.getZToHigh().get(1).getX();
+                        float y2 = it.getZToHigh().get(1).getY();
+                        float z2 = it.getZToHigh().get(1).getY();
+
+                        float t = (currentZ - z1)/(z2 - z1);
+                        x = x1 + t * (x2-x1);
+                        y = y1 + t * (y2-y1);
+                        z = currentZ;
+                        points.add(new Point(x, y, z));
+
+                        if (currentZ < it.getZToHigh().get(1).getZ()) {
+                            x1 = it.getZToHigh().get(0).getX();
+                            y1 = it.getZToHigh().get(0).getY();
+                            z1 = it.getZToHigh().get(0).getY();
+
+                            x2 = it.getZToHigh().get(1).getX();
+                            y2 = it.getZToHigh().get(1).getY();
+                            z2 = it.getZToHigh().get(1).getY();
+
+                            t = (currentZ - z1)/(z2 - z1);
+                            x = x1 + t * (x2-x1);
+                            y = y1 + t * (y2-y1);
+                            z = currentZ;
+                            points.add(new Point(x, y, z));
+                        } else {
+                            x1 = it.getZToHigh().get(0).getX();
+                            y1 = it.getZToHigh().get(0).getY();
+                            z1 = it.getZToHigh().get(0).getY();
+
+                            x2 = it.getZToHigh().get(2).getX();
+                            y2 = it.getZToHigh().get(2).getY();
+                            z2 = it.getZToHigh().get(2).getY();
+
+                            t = (currentZ - z1)/(z2 - z1);
+                            x = x1 + t * (x2-x1);
+                            y = y1 + t * (y2-y1);
+                            z = currentZ;
+                            points.add(new Point(x, y, z));
+                        }
+
+
+                        /*
+                        S0 = P0 + t * (P2 - P0) Where t is the projective length
+                        t=(Zp-Z0)/(Z2-Z0)
+
+                        S0x = X0 + t * (X2 - X0)
+                        S0y = Y0 + t * (Y2 - Y0)
+                        S0z = Zp
+                        */
+                        /*
+                        S1x = X0 + t * (X2 - X0)
+                        S1y = Y0 + t * (Y2 - Y0)
+                        S1z = Zp
+                        */
+                    }
+                }
+
+                if(!points.isEmpty()) {
+                    for (Point it : points) {
+                        canvas.drawPoint(it.getX()*100, it.getY()*100, p);
+                    }
+                    flag = false;
+                    dv.invalidate();
+                }
+
+/*                for (Triangle it:list){
+                    if(it.getZmin() < currentZ){
+                        activeTriangleList.add();
+                    }
+
+
                     float x1 = it.getFirst().getX();
                     float y1 = it.getFirst().getY();
                     float x2 = it.getSecond().getX();
@@ -273,9 +371,9 @@ public class MainActivity extends Activity {
                    // canvas.drawPoint(it.next().getFirst().getX(), it.next().getFirst().getY(), p);
                    canvas.drawLine(x1*100,y1*100,x2*100,y2*100,p);
 
-                }
+                }*/
 
-                dv.invalidate();
+
                 //flag = false;
 
             }
