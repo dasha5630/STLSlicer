@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
             while ((in.read(buff)) != -1){
                 bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
                 fl = bf.getFloat();
-                fl.byteValue();
+               // fl.byteValue();
                 cntr++;
                 switch (cntr){
                     case 1:
@@ -147,7 +147,9 @@ public class MainActivity extends Activity {
                     case 9:
                         point3.setZ(fl);
                         list.add(new Triangle(point1, point2, point3));
-
+                        point1 = new Point();
+                        point2 = new Point();
+                        point3 = new Point();
                         in.skip(14);
                         cntr = 0;
                         break;
@@ -355,7 +357,6 @@ public class MainActivity extends Activity {
                         canvas.drawPoint(it.getX()*100, it.getY()*100, p);
                     }
                     flag = false;
-                    dv.invalidate();
                 }
 
 /*                for (Triangle it:list){

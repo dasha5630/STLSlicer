@@ -42,13 +42,25 @@ public class Point implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        if(o instanceof Point){
+        if(o instanceof Point) {
             Point another = (Point) o;
-            if(another.getZ() < this.getZ())      return 1;
-            else if(another.getZ() > this.getZ()) return -1;
-            else                                  return 0;
+            return Float.compare(this.getZ(), another.getZ());
         } else {
             throw new IllegalArgumentException("type is't suitable to compare");
         }
+//        if(o instanceof Point){
+//            Point another = (Point) o;
+//            if(another.getZ() < this.getZ()) {
+//                return 1;
+//            }
+//            else if(another.getZ() > this.getZ()){
+//                return -1;
+//            }
+//            else{
+//                return 0;
+//            }
+//        } else {
+//            throw new IllegalArgumentException("type is't suitable to compare");
+//        }
     }
 }

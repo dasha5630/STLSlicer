@@ -10,7 +10,7 @@ public class Triangle implements Comparable{
     private Point first;
     private Point second;
     private Point third;
-    private ArrayList<Point> ZToHigh = new ArrayList<>();
+    private ArrayList<Point> ZToHigh = new ArrayList<Point>();
     private float Zmin;
     private float Z2;
     private float Zmax;
