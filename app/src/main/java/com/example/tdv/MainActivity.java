@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 
     Float step;
 
-    Float currentZ = 1f;
+    Float currentZ = 9.99f;
 
     /** Called when the activity is first created. */
     @Override
@@ -111,6 +111,7 @@ public class MainActivity extends Activity {
             while ((in.read(buff)) != -1){
                 bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
                 fl = bf.getFloat();
+                if(Float.compare(fl, 0.01f) <= 0) fl = 0f;
                // fl.byteValue();
                 cntr++;
                 switch (cntr){
@@ -291,13 +292,17 @@ public class MainActivity extends Activity {
 
                 if(!activeTriangleList.isEmpty()){
                     for (Triangle it:activeTriangleList) {
-                        float x1 = it.getZToHigh().get(2).getX();
-                        float y1 = it.getZToHigh().get(2).getY();
-                        float z1 = it.getZToHigh().get(2).getZ();
+                        float x1 = it.getZToHigh().get(0).getX();
+                        float y1 = it.getZToHigh().get(0).getY();
+                        float z1 = it.getZToHigh().get(0).getZ();
 
-                        float x2 = it.getZToHigh().get(0).getX();
-                        float y2 = it.getZToHigh().get(0).getY();
-                        float z2 = it.getZToHigh().get(0).getZ();
+                        float x2 = it.getZToHigh().get(2).getX();
+                        float y2 = it.getZToHigh().get(2).getY();
+                        float z2 = it.getZToHigh().get(2).getZ();
+
+
+
+                        if(Float.compare(z1,z2) >= 0) continue;
 
                         float t = (currentZ - z1)/(z2 - z1);
                         x = x1 + t * (x2-x1);
@@ -305,14 +310,14 @@ public class MainActivity extends Activity {
                         z = currentZ;
                         points.add(new Point(x, y, z));
 
-                        if (currentZ < z2) {
+                        if (Float.compare(it.getZToHigh().get(1).getZ(), currentZ) >= 0) {
                             x1 = it.getZToHigh().get(0).getX();
                             y1 = it.getZToHigh().get(0).getY();
-                            z1 = it.getZToHigh().get(0).getY();
+                            z1 = it.getZToHigh().get(0).getZ();
 
                             x2 = it.getZToHigh().get(1).getX();
                             y2 = it.getZToHigh().get(1).getY();
-                            z2 = it.getZToHigh().get(1).getY();
+                            z2 = it.getZToHigh().get(1).getZ();
 
                             t = (currentZ - z1)/(z2 - z1);
                             x = x1 + t * (x2-x1);
@@ -320,13 +325,15 @@ public class MainActivity extends Activity {
                             z = currentZ;
                             points.add(new Point(x, y, z));
                         } else {
-                            x1 = it.getZToHigh().get(2).getX();
-                            y1 = it.getZToHigh().get(2).getY();
-                            z1 = it.getZToHigh().get(2).getY();
+                            x1 = it.getZToHigh().get(1).getX();
+                            y1 = it.getZToHigh().get(1).getY();
+                            z1 = it.getZToHigh().get(1).getZ();
 
-                            x2 = it.getZToHigh().get(1).getX();
-                            y2 = it.getZToHigh().get(1).getY();
-                            z2 = it.getZToHigh().get(1).getY();
+                            x2 = it.getZToHigh().get(2).getX();
+                            y2 = it.getZToHigh().get(2).getY();
+                            z2 = it.getZToHigh().get(2).getZ();
+
+                            if(Float.compare(z1,z2) >= 0) continue;
 
                             t = (currentZ - z1)/(z2 - z1);
                             x = x1 + t * (x2-x1);
