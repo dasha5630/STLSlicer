@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 
     Float step;
 
-    Float currentZ = 0.2f;
+    Float currentZ = 1f;
 
     /** Called when the activity is first created. */
     @Override
@@ -293,11 +293,11 @@ public class MainActivity extends Activity {
                     for (Triangle it:activeTriangleList) {
                         float x1 = it.getZToHigh().get(2).getX();
                         float y1 = it.getZToHigh().get(2).getY();
-                        float z1 = it.getZToHigh().get(2).getY();
+                        float z1 = it.getZToHigh().get(2).getZ();
 
-                        float x2 = it.getZToHigh().get(1).getX();
-                        float y2 = it.getZToHigh().get(1).getY();
-                        float z2 = it.getZToHigh().get(1).getY();
+                        float x2 = it.getZToHigh().get(0).getX();
+                        float y2 = it.getZToHigh().get(0).getY();
+                        float z2 = it.getZToHigh().get(0).getZ();
 
                         float t = (currentZ - z1)/(z2 - z1);
                         x = x1 + t * (x2-x1);
@@ -305,7 +305,7 @@ public class MainActivity extends Activity {
                         z = currentZ;
                         points.add(new Point(x, y, z));
 
-                        if (currentZ < it.getZToHigh().get(1).getZ()) {
+                        if (currentZ < z2) {
                             x1 = it.getZToHigh().get(0).getX();
                             y1 = it.getZToHigh().get(0).getY();
                             z1 = it.getZToHigh().get(0).getY();
@@ -320,13 +320,13 @@ public class MainActivity extends Activity {
                             z = currentZ;
                             points.add(new Point(x, y, z));
                         } else {
-                            x1 = it.getZToHigh().get(0).getX();
-                            y1 = it.getZToHigh().get(0).getY();
-                            z1 = it.getZToHigh().get(0).getY();
+                            x1 = it.getZToHigh().get(2).getX();
+                            y1 = it.getZToHigh().get(2).getY();
+                            z1 = it.getZToHigh().get(2).getY();
 
-                            x2 = it.getZToHigh().get(2).getX();
-                            y2 = it.getZToHigh().get(2).getY();
-                            z2 = it.getZToHigh().get(2).getY();
+                            x2 = it.getZToHigh().get(1).getX();
+                            y2 = it.getZToHigh().get(1).getY();
+                            z2 = it.getZToHigh().get(1).getY();
 
                             t = (currentZ - z1)/(z2 - z1);
                             x = x1 + t * (x2-x1);
