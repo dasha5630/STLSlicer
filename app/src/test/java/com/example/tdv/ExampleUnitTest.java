@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.tdv;
 
 import org.junit.Test;
 

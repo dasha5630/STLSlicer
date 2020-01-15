@@ -11,14 +11,8 @@ import android.os.Bundle;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Scanner;
 
 import android.app.Activity;
 import android.util.Log;
@@ -26,30 +20,27 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tdv.R;
-import com.example.tdv.slicing.Point;
-import com.example.tdv.slicing.Triangle;
+import com.example.tdv.contract.IPresenter;
+import com.example.tdv.contract.IViewSlicerScreen;
+import com.example.tdv.repository.slicer.Point;
+import com.example.tdv.repository.slicer.Triangle;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements IViewSlicerScreen {
 
-    final String LOG_TAG = "myLogs";
+    IPresenter presenter = new Presenter();
 
     String FILENAME = "file";
-
-    float numberOfTriangle = 0;
-
-    boolean flag = false;
-
+//
+//    float numberOfTriangle = 0;
+//
+//    boolean flag = false;
+//
     View dv;
-    ArrayList<Triangle> list = new ArrayList<Triangle>();
-    ArrayList<Triangle> activeTriangleList = new ArrayList<>();
-    ArrayList<Point> points = new ArrayList<>();
-
-   // Iterator<Triangle> it = list.iterator();
-
-    Float step;
-
-    Float currentZ = 9.99f;
+//    ArrayList<Triangle> list = new ArrayList<Triangle>();
+//    ArrayList<Triangle> activeTriangleList = new ArrayList<>();
+//    ArrayList<Point> points = new ArrayList<>();
+//
+//    Float currentZ = 5f;
 
     /** Called when the activity is first created. */
     @Override
@@ -74,37 +65,32 @@ public class MainActivity extends Activity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                FILENAME = (String) name;
-                ParseInputStream(input);
+                FILENAME = name;
+                //ParseInputStream(input);
+                presenter.fileReceived(input);
         }
     }
-    public void onclick(View v) {
-        switch (v.getId()) {
-            case R.id.btnRead:
-                if(FILENAME != "file")
-                    openText(v);
-                break;
-        }
-    }
+//    public void onclick(View v) {
+//        switch (v.getId()) {
+//            case R.id.btnRead:
+//                if(FILENAME != "file")
+//                    openText(v);
+//                break;
+//        }
+//    }
 
-    private void ParseInputStream(InputStream in) {
-/*        float fl = 0;
-        int i = 0;*/
-        long test = 0;
+ /*   private void ParseInputStream(InputStream in) {
         Point point1 = new Point();
         Point point2 = new Point();
         Point point3 = new Point();
+        byte[] buff = new byte[4];
+        int cntr = 0;
+        Float fl = 0f;
+        ByteBuffer bf;
 
         try {
-            byte[] buff = new byte[4];
-            byte element = 0;
-            int cntr = 0;
-            Float fl = 0f;
-            ByteBuffer bf;
-            //DataInputStream dis = new DataInputStream(in);
-            test = in.skip(80);
-
-            test = in.read(buff);
+            in.skip(80);
+            in.read(buff);
             bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
             numberOfTriangle = bf.getInt();
             in.skip(12);
@@ -112,7 +98,6 @@ public class MainActivity extends Activity {
                 bf = ByteBuffer.wrap(buff).order(ByteOrder.LITTLE_ENDIAN);
                 fl = bf.getFloat();
                 if(Float.compare(fl, 0.01f) <= 0) fl = 0f;
-               // fl.byteValue();
                 cntr++;
                 switch (cntr){
                     case 1:
@@ -165,66 +150,13 @@ public class MainActivity extends Activity {
                 Collections.sort(list);
                 dv.invalidate();
             }
-            /*            in.skip(84);
-            int element = 0;
-            while ((element = in.read()) != -1){
-                fl = element << 8*i;
-                i++;
-                if(i >= 5){
-                    i = 0;
-                }
-
-            }*/
-/*            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            reader.skip(80);
-            in.skip(80);
-            Scanner scanner = new Scanner(in);
-            Point point = new Point();
-            Point point1 = new Point();
-            Point point2 = new Point();
-            Point point3 = new Point();
-            int counter = 0;
-            scanner.hasNextFloat();
-            numberOfTriangle = scanner.nextByte();
-            scanner.hasNextFloat();
-            numberOfTriangle = (scanner.nextByte() << 8);
-            while (scanner.hasNextFloat()) {
-                if(counter == 0)
-                    point.setX(scanner.nextFloat());
-                if(counter == 1)
-                    point.setY(scanner.nextFloat());
-                if(counter == 2)
-                    point.setZ(scanner.nextFloat());
-                if(counter == 3)
-                    point1.setX(scanner.nextFloat());
-                if(counter == 4)
-                    point1.setY(scanner.nextFloat());
-                if(counter == 5)
-                    point1.setZ(scanner.nextFloat());
-                if(counter == 6)
-                    point2.setX(scanner.nextFloat());
-                if(counter == 7)
-                    point2.setY(scanner.nextFloat());
-                if(counter == 8)
-                    point2.setZ(scanner.nextFloat());
-                if(counter == 9)
-                    point3.setX(scanner.nextFloat());
-                if(counter == 10)
-                    point3.setY(scanner.nextFloat());
-                if(counter == 11){
-                    point3.setZ(scanner.nextFloat());
-                    counter = 0;
-                    list.add(new Triangle(point, point1, point2, point3));
-                }
-                counter++;
-            }*/
         }
         catch (Exception e) {
             Log.e("MainActivity", "ParseInputStream exception: " + e.getMessage());
         }
 
 
-    }
+    }*/
 
     public void openText(View view){
 
@@ -252,6 +184,11 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    public void showSlice() {
+
+    }
+
     class DrawView extends View {
 
         Paint p;
@@ -265,10 +202,10 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onDraw(Canvas canvas) {
-
-            float x = 0;
-            float y = 0;
-            float z = 0;
+//
+//            float x = 0;
+//            float y = 0;
+//            float z = 0;
             // заливка канвы цветом
             canvas.drawARGB(80, 102, 204, 255);
             // настройка кисти
@@ -278,8 +215,8 @@ public class MainActivity extends Activity {
             p.setStrokeWidth(10);
 
 
-            if(flag){
-                for(Triangle it:list){
+ //           if(flag){
+/*                for(Triangle it:list){
                     if(it.getZToHigh().get(0).getZ() <= currentZ) {
                         if (it.getZToHigh().get(2).getZ() >= currentZ) {
                             activeTriangleList.add(it);
@@ -341,50 +278,16 @@ public class MainActivity extends Activity {
                             z = currentZ;
                             points.add(new Point(x, y, z));
                         }
-
-
-                        /*
-                        S0 = P0 + t * (P2 - P0) Where t is the projective length
-                        t=(Zp-Z0)/(Z2-Z0)
-
-                        S0x = X0 + t * (X2 - X0)
-                        S0y = Y0 + t * (Y2 - Y0)
-                        S0z = Zp
-                        */
-                        /*
-                        S1x = X0 + t * (X2 - X0)
-                        S1y = Y0 + t * (Y2 - Y0)
-                        S1z = Zp
-                        */
                     }
-                }
+                }*/
 
                 if(!points.isEmpty()) {
                     for (Point it : points) {
                         canvas.drawPoint(it.getX()*100, it.getY()*100, p);
                     }
-                    flag = false;
+                    //flag = false;
                 }
-
-/*                for (Triangle it:list){
-                    if(it.getZmin() < currentZ){
-                        activeTriangleList.add();
-                    }
-
-
-                    float x1 = it.getFirst().getX();
-                    float y1 = it.getFirst().getY();
-                    float x2 = it.getSecond().getX();
-                    float y2 = it.getSecond().getY();
-                   // canvas.drawPoint(it.next().getFirst().getX(), it.next().getFirst().getY(), p);
-                   canvas.drawLine(x1*100,y1*100,x2*100,y2*100,p);
-
-                }*/
-
-
-                //flag = false;
-
-            }
+    //        }
 
         }
 

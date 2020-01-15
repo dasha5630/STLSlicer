@@ -1,4 +1,4 @@
-package com.example.tdv.slicing;
+package com.example.tdv.repository.slicer;
 
 public class Point implements Comparable{
 
@@ -13,7 +13,6 @@ public class Point implements Comparable{
     }
 
     public  Point(){
-
     }
 
     public float getX() {
@@ -48,19 +47,5 @@ public class Point implements Comparable{
         } else {
             throw new IllegalArgumentException("type is't suitable to compare");
         }
-//        if(o instanceof Point){
-//            Point another = (Point) o;
-//            if(another.getZ() < this.getZ()) {
-//                return 1;
-//            }
-//            else if(another.getZ() > this.getZ()){
-//                return -1;
-//            }
-//            else{
-//                return 0;
-//            }
-//        } else {
-//            throw new IllegalArgumentException("type is't suitable to compare");
-//        }
     }
 }
