@@ -18,9 +18,9 @@ public class Slicer {
 
     private  Float currentZ = 5f;
 
-    public void slicing(InputStream in){
+    public ArrayList<Point> slicing(InputStream in){
         ParseInputStream(in);
-        slicingAlgorithm();
+        return slicingAlgorithm();
     }
 
     private void ParseInputStream(InputStream in) {
@@ -101,7 +101,7 @@ public class Slicer {
 
     }
 
-    private void slicingAlgorithm(){
+    private ArrayList<Point> slicingAlgorithm(){
         float x = 0;
         float y = 0;
         float z = 0;
@@ -170,5 +170,7 @@ public class Slicer {
                 }
             }
         }
+
+        return points;
     }
 }

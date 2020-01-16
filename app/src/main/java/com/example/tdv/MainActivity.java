@@ -19,15 +19,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Point;
 
 import com.example.tdv.contract.IPresenter;
 import com.example.tdv.contract.IViewSlicerScreen;
-import com.example.tdv.repository.slicer.Point;
+//import com.example.tdv.repository.slicer.Point;
 import com.example.tdv.repository.slicer.Triangle;
 
 public class MainActivity extends Activity implements IViewSlicerScreen {
 
-    IPresenter presenter = new Presenter();
+    IPresenter presenter;
 
     String FILENAME = "file";
 //
@@ -38,7 +39,7 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
     View dv;
 //    ArrayList<Triangle> list = new ArrayList<Triangle>();
 //    ArrayList<Triangle> activeTriangleList = new ArrayList<>();
-//    ArrayList<Point> points = new ArrayList<>();
+    ArrayList<Point> points = new ArrayList<>();
 //
 //    Float currentZ = 5f;
 
@@ -48,6 +49,7 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
         super.onCreate(savedInstanceState);
         dv = new DrawView(this);
         setContentView(dv);// setContentView(R.layout.activity_main);
+        presenter = new Presenter(this);
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -185,8 +187,9 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
     }
 
     @Override
-    public void showSlice() {
-
+    public void showSlice(ArrayList<Point> points) {
+        this.points.addAll(points);
+        //dv.invalidate();
     }
 
     class DrawView extends View {
@@ -283,7 +286,7 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
 
                 if(!points.isEmpty()) {
                     for (Point it : points) {
-                        canvas.drawPoint(it.getX()*100, it.getY()*100, p);
+                        canvas.drawPoint(it.x * 100, it.y * 100, p);
                     }
                     //flag = false;
                 }
