@@ -11,7 +11,6 @@ import java.util.Collections;
 public class Slicer {
 
     private  float numberOfTriangle = 0;
-    private  boolean flag = false;
     private  ArrayList<Triangle> list = new ArrayList<Triangle>();
     private  ArrayList<Triangle> activeTriangleList = new ArrayList<>();
     private  ArrayList<Point> points = new ArrayList<>();
@@ -88,9 +87,8 @@ public class Slicer {
                         break;
                 }
             }
-
+            in.close();
             if(!list.isEmpty()){
-                flag = true;
                 Collections.sort(list);
             }
         }
@@ -170,7 +168,6 @@ public class Slicer {
                 }
             }
         }
-
         return points;
     }
 }
