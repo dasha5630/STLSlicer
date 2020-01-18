@@ -212,13 +212,13 @@ public class Slicer {
                 }
                 for(Line l:lines){
                     if(line.getPoint1().equals(l.getPoint1()) || line.getPoint1().equals(l.getPoint2())){
-                        if((lines.size() - 1) == size) points.add(line.getPoint2());
+                        if((lines.size() + 1) == size) points.add(line.getPoint2());
                         points.add(line.getPoint1());
                         lines.remove(l);
                         line = l;
                         break;
                     } else if(line.getPoint2().equals(l.getPoint1()) || line.getPoint2().equals(l.getPoint2())){
-                        if((lines.size() - 1) == size) points.add(line.getPoint1());
+                        if((lines.size() + 1) == size) points.add(line.getPoint1());
                         points.add(line.getPoint2());
                         lines.remove(l);
                         line = l;
