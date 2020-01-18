@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            canvas.drawARGB(0, 0, 0, 0);
+            canvas.drawARGB(0xff, 0, 0, 0);
             p.setColor(Color.WHITE); //brush color
             p.setStrokeWidth(10); //brush size
 

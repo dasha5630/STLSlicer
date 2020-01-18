@@ -48,4 +48,30 @@ public class Point implements Comparable{
             throw new IllegalArgumentException("type is't suitable to compare");
         }
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Point) {
+            Point another = (Point) o;
+            return (Float.compare(this.x, another.x) == 0
+                    && Float.compare(this.y, another.y) == 0
+                    && Float.compare(this.z, another.z) == 0);
+        } else {
+            throw new IllegalArgumentException("type is't suitable to compare");
+        }
+    }
+
+    @Override
+    public int hashCode(){
+        return Float.floatToIntBits(this.x)
+                + Float.floatToIntBits(this.y)
+                + Float.floatToIntBits(this.z);
+    }
+
+
+
+    /*
+    TODO:
+      override equals and hash
+     */
 }

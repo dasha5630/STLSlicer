@@ -3,23 +3,39 @@ package com.example.tdv.repository.slicer;
 import android.util.Log;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+/*
+ TODO:
+  make it class with singleton pattern
+ */
 public class Slicer {
 
-    private  float numberOfTriangle = 0;
-    private  ArrayList<Triangle> list = new ArrayList<Triangle>();
-    private  ArrayList<Triangle> activeTriangleList = new ArrayList<>();
-    private  ArrayList<Point> points = new ArrayList<>();
+    private  float numberOfTriangle;
+    private  ArrayList<Triangle> list;
+    private  ArrayList<Triangle> activeTriangleList;
+    private  ArrayList<Line> lines;
+  //  private  ArrayList<Point> points;
 
-    private  Float currentZ = 5f;
+    private  Float currentZ;
+
+    public Slicer(){
+        numberOfTriangle = 0;
+        list = new ArrayList<>();
+        activeTriangleList = new ArrayList<>();
+        lines = new ArrayList<>();
+    //    points = new ArrayList<>();
+        currentZ = 5f;
+    }
 
     public ArrayList<Point> slicing(InputStream in){
         ParseInputStream(in);
-        return slicingAlgorithm();
+        return linesToPathPoints(slicingAlgorithm());
     }
 
     private void ParseInputStream(InputStream in) {
@@ -28,7 +44,7 @@ public class Slicer {
         Point point3 = new Point();
         byte[] buff = new byte[4];
         int cntr = 0;
-        Float fl = 0f;
+        float fl = 0f;
         ByteBuffer bf;
 
         try {
@@ -99,7 +115,7 @@ public class Slicer {
 
     }
 
-    private ArrayList<Point> slicingAlgorithm(){
+    private ArrayList<Line> slicingAlgorithm(){
         float x = 0;
         float y = 0;
         float z = 0;
@@ -117,6 +133,9 @@ public class Slicer {
 
         if(!activeTriangleList.isEmpty()){
             for (Triangle it:activeTriangleList) {
+                Point p1;
+                Point p2;
+
                 float x1 = it.getZToHigh().get(0).getX();
                 float y1 = it.getZToHigh().get(0).getY();
                 float z1 = it.getZToHigh().get(0).getZ();
@@ -133,7 +152,9 @@ public class Slicer {
                 x = x1 + t * (x2-x1);
                 y = y1 + t * (y2-y1);
                 z = currentZ;
-                points.add(new Point(x, y, z));
+
+                p1 = new Point(x, y, z);
+                //points.add(p1);
 
                 if (Float.compare(it.getZToHigh().get(1).getZ(), currentZ) >= 0) {
                     x1 = it.getZToHigh().get(0).getX();
@@ -148,7 +169,9 @@ public class Slicer {
                     x = x1 + t * (x2-x1);
                     y = y1 + t * (y2-y1);
                     z = currentZ;
-                    points.add(new Point(x, y, z));
+
+                    p2 = new Point(x, y, z);
+                   // points.add(p2);
                 } else {
                     x1 = it.getZToHigh().get(1).getX();
                     y1 = it.getZToHigh().get(1).getY();
@@ -164,10 +187,48 @@ public class Slicer {
                     x = x1 + t * (x2-x1);
                     y = y1 + t * (y2-y1);
                     z = currentZ;
-                    points.add(new Point(x, y, z));
+
+                    p2 = new Point(x, y, z);
+                   // points.add(p2);
                 }
+                lines.add(new Line(p1, p2));
             }
         }
-        return points;
+        return lines;
+    }
+
+    /*
+    TODO compare float with Float.equal compare Points with override function equal too
+     */
+    private ArrayList<Point> linesToPathPoints(ArrayList<Line> lines){
+        if(!lines.isEmpty()){
+            ArrayList<Point> points = new ArrayList<>();
+            Line line = lines.get(0);
+            int size = lines.size();
+            lines.remove(line);
+            for (int i = 0; i < size; i++){
+                if(points.size() > 2
+                        && points.get(0) == points.get(points.size() - 1)){
+                }
+                for(Line l:lines){
+                    if(line.getPoint1().equals(l.getPoint1()) || line.getPoint1().equals(l.getPoint2())){
+                        if((lines.size() - 1) == size) points.add(line.getPoint2());
+                        points.add(line.getPoint1());
+                        lines.remove(l);
+                        line = l;
+                        break;
+                    } else if(line.getPoint2().equals(l.getPoint1()) || line.getPoint2().equals(l.getPoint2())){
+                        if((lines.size() - 1) == size) points.add(line.getPoint1());
+                        points.add(line.getPoint2());
+                        lines.remove(l);
+                        line = l;
+                        break;
+                    }
+                }
+
+            }
+            return points;
+        }
+        return null;
     }
 }
