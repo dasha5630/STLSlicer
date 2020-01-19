@@ -3,12 +3,10 @@ package com.example.tdv.repository.slicer;
 import android.util.Log;
 
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /*
  TODO:
@@ -20,7 +18,6 @@ public class Slicer {
     private  ArrayList<Triangle> list;
     private  ArrayList<Triangle> activeTriangleList;
     private  ArrayList<Line> lines;
-  //  private  ArrayList<Point> points;
 
     private  Float currentZ;
 
@@ -29,7 +26,6 @@ public class Slicer {
         list = new ArrayList<>();
         activeTriangleList = new ArrayList<>();
         lines = new ArrayList<>();
-    //    points = new ArrayList<>();
         currentZ = 5f;
     }
 
@@ -154,7 +150,6 @@ public class Slicer {
                 z = currentZ;
 
                 p1 = new Point(x, y, z);
-                //points.add(p1);
 
                 if (Float.compare(it.getZToHigh().get(1).getZ(), currentZ) >= 0) {
                     x1 = it.getZToHigh().get(0).getX();
@@ -171,7 +166,6 @@ public class Slicer {
                     z = currentZ;
 
                     p2 = new Point(x, y, z);
-                   // points.add(p2);
                 } else {
                     x1 = it.getZToHigh().get(1).getX();
                     y1 = it.getZToHigh().get(1).getY();
@@ -189,7 +183,6 @@ public class Slicer {
                     z = currentZ;
 
                     p2 = new Point(x, y, z);
-                   // points.add(p2);
                 }
                 lines.add(new Line(p1, p2));
             }
@@ -197,9 +190,6 @@ public class Slicer {
         return lines;
     }
 
-    /*
-    TODO compare float with Float.equal compare Points with override function equal too
-     */
     private ArrayList<Point> linesToPathPoints(ArrayList<Line> lines){
         if(!lines.isEmpty()){
             ArrayList<Point> points = new ArrayList<>();

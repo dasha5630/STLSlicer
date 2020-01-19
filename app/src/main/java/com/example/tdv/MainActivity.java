@@ -74,23 +74,34 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
         Rect rect;
         Path path;
 
-
+        Paint p1;
         public DrawView(Context context) {
             super(context);
             p = new Paint();
+            p1 = new Paint();
             rect = new Rect();
+            path = new Path();
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
             canvas.drawARGB(0xff, 0, 0, 0);
-            p.setColor(Color.WHITE); //brush color
+
+
+            p1.setColor(Color.WHITE);
+            p.setColor(Color.GREEN); //brush color
             p.setStrokeWidth(10); //brush size
+            p.setStyle(Paint.Style.FILL);
 
                 if(!points.isEmpty()) {
+                    path.moveTo(points.get(0).x*100,points.get(0).y*100);
                     for (Point it : points) {
+                        path.lineTo(it.x*100,it.y*100);
                         canvas.drawPoint(it.x * 100, it.y * 100, p);
                     }
+                    path.close();
+
+                    canvas.drawPath(path, p1);
                 }
         }
 

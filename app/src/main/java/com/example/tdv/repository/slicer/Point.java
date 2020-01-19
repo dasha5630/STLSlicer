@@ -67,11 +67,4 @@ public class Point implements Comparable{
                 + Float.floatToIntBits(this.y)
                 + Float.floatToIntBits(this.z);
     }
-
-
-
-    /*
-    TODO:
-      override equals and hash
-     */
 }
