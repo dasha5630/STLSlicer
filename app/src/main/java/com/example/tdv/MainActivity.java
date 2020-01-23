@@ -3,7 +3,6 @@ package com.example.tdv;
 import android.content.*;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -20,7 +19,6 @@ import android.graphics.Point;
 
 import com.example.tdv.contract.IPresenter;
 import com.example.tdv.contract.IViewSlicerScreen;
-
 
 public class MainActivity extends Activity implements IViewSlicerScreen {
 
@@ -86,7 +84,6 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
         @Override
         protected void onDraw(Canvas canvas) {
             canvas.drawARGB(0xff, 0, 0, 0);
-
 
             p1.setColor(Color.WHITE);
             p.setColor(Color.GREEN); //brush color
