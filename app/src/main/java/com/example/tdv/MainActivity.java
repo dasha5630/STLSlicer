@@ -19,6 +19,7 @@ import android.graphics.Point;
 
 import com.example.tdv.contract.IPresenter;
 import com.example.tdv.contract.IViewSlicerScreen;
+import com.example.tdv.repository.ble.DeviceScanActivity;
 
 public class MainActivity extends Activity implements IViewSlicerScreen {
 
@@ -34,6 +35,7 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
         dv = new DrawView(this);
         setContentView(dv);
         presenter = new Presenter(this);
+        startService(new Intent(this, DeviceScanActivity.class));
 
         Intent intent = getIntent();
         String action = intent.getAction();

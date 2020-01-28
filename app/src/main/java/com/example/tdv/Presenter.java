@@ -1,9 +1,11 @@
 package com.example.tdv;
 
+import android.content.Intent;
 import android.graphics.Point;
 
 import com.example.tdv.contract.IPresenter;
 import com.example.tdv.contract.IViewSlicerScreen;
+import com.example.tdv.repository.ble.DeviceScanActivity;
 import com.example.tdv.repository.slicer.Slicer;
 
 import java.io.InputStream;
@@ -23,6 +25,7 @@ public class Presenter implements IPresenter {
     @Override
     public void fileReceived(InputStream in) {
         mView.showSlice(points3DToPoints2D(slicer.slicing(in)));
+
     }
 
     private ArrayList<Point> points3DToPoints2D(ArrayList<com.example.tdv.repository.slicer.Point> points3D){
