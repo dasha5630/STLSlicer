@@ -38,7 +38,7 @@ import androidx.annotation.Nullable;
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
-public class DeviceScanActivity extends Service implements BluetoothAdapter.LeScanCallback {
+public class DeviceScanActivity extends Activity {
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
@@ -48,7 +48,7 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
     private static final long SCAN_PERIOD = 10000;
 
 
-    public void onCreate() {
+/*    public void onCreate() {
         super.onCreate();
         getBTService();
     }
@@ -65,10 +65,10 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
             }
         }
         return START_STICKY;
-    }
+    }*/
 
 
-    // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
+/*    // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
     // BluetoothAdapter through BluetoothManager.
     public BluetoothAdapter getBTService(){
         BluetoothManager btManager = (BluetoothManager) getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
@@ -81,14 +81,14 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
     }
 
     public void startBLEscan(){
-        mBluetoothAdapter.startLeScan(this);
+        mBluetoothAdapter.startLeScan(mLeScanCallback);
     }
 
     public void stopBLEscan(){
-        mBluetoothAdapter.stopLeScan(this);
-    }
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+    }*/
 
-/*    @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new Handler();
@@ -110,6 +110,7 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
             finish();
             return;
         }
+
     }
 
 
@@ -130,7 +131,7 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
         scanLeDevice(true);
     }
 
-    @Override
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // User chose not to enable Bluetooth.
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
@@ -138,9 +139,9 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
+    }*/
 
-    @Override
+/*    @Override
     protected void onPause() {
         super.onPause();
         scanLeDevice(false);
@@ -152,43 +153,60 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
         final Intent intent = new Intent(this, DeviceControlActivity.class);
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, "CyberX Beauty Mask");
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        if (mScanning) {
-            stopBLEscan();
-            mScanning = false;
-        }
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
         startActivity(intent);
     }
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
-            mScanning = true;
-            startBLEscan();
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
-            mScanning = false;
-            stopBLEscan();
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
     }
 
-
-
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
+/*    @Override
     public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
         BluetoothDevice mLeDevice;
 
-        if(device!=null && device.getName()!=null){
+        if(device!=null && device.getName()!=null && device.getAddress() != null){
             if(rssi > -90 && rssi <-1){
                     //This Main looper thread is main for connect gatt, don't remove it
                     // Although you need to pass an appropriate context getApplicationContext(),
                     //Here if you use Looper.getMainLooper() it will stop getting callback and give internal exception fail to register //callback
                     new Handler(getApplicationContext().getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(device.getAddress().equals("EB:52:75:EF:5D:89")
+                                    || device.getName().equals("CyberXmaskamaska"))
+                                foundMyDevice(device);
+                        }
+                    });
+                }
+                stopBLEscan();
+            }else{
+                Log.v("Device Scan Activity", device.getAddress()+" "+"BT device is still too far - not connecting");
+            }
+        }
+
+
+                <service
+            android:name="com.example.tdv.repository.ble.DeviceScanActivity"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="com.example.tdv.repository.ble.BluetoothLeService"
+            android:enabled="true"
+            android:exported="false" />*/
+
+    // Device scan callback.
+    private BluetoothAdapter.LeScanCallback mLeScanCallback =
+            new BluetoothAdapter.LeScanCallback() {
+
+                @Override
+                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if(device != null
@@ -200,9 +218,5 @@ public class DeviceScanActivity extends Service implements BluetoothAdapter.LeSc
                         }
                     });
                 }
-                stopBLEscan();
-            }else{
-                Log.v("Device Scan Activity", device.getAddress()+" "+"BT device is still too far - not connecting");
-            }
-        }
+            };
 }

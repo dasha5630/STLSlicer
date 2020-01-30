@@ -48,12 +48,10 @@
             </intent-filter>
         </activity>
 
+
+
         <service
-            android:name="com.example.tdv.repository.ble.DeviceScanActivity"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="com.example.tdv.repository.ble.BluetoothLeService"
+            android:name="com.example.tdv.repository.ble.BeaconService"
             android:enabled="true"
             android:exported="false" />
 

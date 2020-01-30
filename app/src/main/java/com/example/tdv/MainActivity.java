@@ -18,10 +18,11 @@ import android.view.View;
 import android.graphics.Point;
 
 import com.example.tdv.contract.IPresenter;
+import com.example.tdv.contract.IStartActivity;
 import com.example.tdv.contract.IViewSlicerScreen;
 import com.example.tdv.repository.ble.DeviceScanActivity;
 
-public class MainActivity extends Activity implements IViewSlicerScreen {
+public class MainActivity extends Activity implements IViewSlicerScreen, IStartActivity {
 
     View dv;
     IPresenter presenter;
@@ -66,6 +67,12 @@ public class MainActivity extends Activity implements IViewSlicerScreen {
     @Override
     public void showSlice(ArrayList<Point> points) {
         this.points.addAll(points);
+    }
+
+    @Override
+    public void startNewActivity(Class cl) {
+        Intent intent = new Intent(this, cl);
+        startService(intent);
     }
 
     class DrawView extends View {
