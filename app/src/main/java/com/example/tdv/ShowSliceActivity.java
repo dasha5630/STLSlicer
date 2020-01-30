@@ -20,9 +20,8 @@ import android.graphics.Point;
 import com.example.tdv.contract.IPresenter;
 import com.example.tdv.contract.IStartActivity;
 import com.example.tdv.contract.IViewSlicerScreen;
-import com.example.tdv.repository.ble.DeviceScanActivity;
 
-public class MainActivity extends Activity implements IViewSlicerScreen, IStartActivity {
+public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
     View dv;
     IPresenter presenter;
@@ -34,34 +33,15 @@ public class MainActivity extends Activity implements IViewSlicerScreen, IStartA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dv = new DrawView(this);
-        setContentView(dv);
         presenter = new Presenter(this);
-        startService(new Intent(this, DeviceScanActivity.class));
+        setContentView(dv);
 
-        Intent intent = getIntent();
-        String action = intent.getAction();
+    }
 
-        if (action.compareTo(Intent.ACTION_VIEW) == 0) {
-            String scheme = intent.getScheme();
-            ContentResolver resolver = getContentResolver();
-            Uri uri = intent.getData();
-                try {
-                    String name = uri.getLastPathSegment();
-                    Log.v("tag", "File intent detected: " + action + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
-                } catch (NullPointerException e) {
-                    Log.e("tag", "File intent uri is null");
-                    e.printStackTrace();
-                }
-
-                InputStream input = null;
-                try {
-                    input = resolver.openInputStream(uri);
-                    presenter.fileReceived(input);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-        }
+    @Override
+    protected void onResume() {
+        presenter.done();
+        super.onResume();
     }
 
     @Override
@@ -69,12 +49,10 @@ public class MainActivity extends Activity implements IViewSlicerScreen, IStartA
         this.points.addAll(points);
     }
 
-    @Override
-    public void startNewActivity(Class cl) {
-        Intent intent = new Intent(this, cl);
-        startService(intent);
-    }
 
+    public Context getContext(){
+        return this.getApplicationContext();
+    }
     class DrawView extends View {
 
         Paint p;

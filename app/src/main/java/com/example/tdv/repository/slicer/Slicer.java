@@ -18,20 +18,35 @@ public class Slicer {
     private  ArrayList<Triangle> list;
     private  ArrayList<Triangle> activeTriangleList;
     private  ArrayList<Line> lines;
+    private ArrayList<Point> points;
+    private static  Slicer instance;
 
     private  Float currentZ;
 
-    public Slicer(){
+    private Slicer(){
         numberOfTriangle = 0;
         list = new ArrayList<>();
         activeTriangleList = new ArrayList<>();
         lines = new ArrayList<>();
         currentZ = 5f;
+        points = new ArrayList<>();
+    }
+
+    public static Slicer getInstance(){
+        if(instance == null){
+            instance = new Slicer();
+        }
+        return instance;
     }
 
     public ArrayList<Point> slicing(InputStream in){
         ParseInputStream(in);
-        return linesToPathPoints(slicingAlgorithm());
+        points = linesToPathPoints(slicingAlgorithm());
+        return points;
+    }
+
+    public ArrayList<Point> getPoints() {
+        return points;
     }
 
     private void ParseInputStream(InputStream in) {
@@ -105,7 +120,7 @@ public class Slicer {
             }
         }
         catch (Exception e) {
-            Log.e("MainActivity", "ParseInputStream exception: " + e.getMessage());
+            Log.e("ShowSliceActivity", "ParseInputStream exception: " + e.getMessage());
         }
 
 

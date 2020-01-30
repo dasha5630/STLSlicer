@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Stl Reader</string>
-    <string name="read_file">Прочесть файл</string>
+    <string name="next">next</string>
 </resources>
