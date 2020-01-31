@@ -16,13 +16,14 @@ import android.util.Log;
 import android.view.View;
 import android.graphics.Point;
 
-import com.example.tdv.contract.IPresenter;
+import com.example.tdv.contract.ISettingsPresenter;
+import com.example.tdv.contract.IShowSlicePresenter;
 import com.example.tdv.contract.IViewSlicerScreen;
 
 public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
     View dv;
-    IPresenter presenter;
+    IShowSlicePresenter presenter;
     ArrayList<Point> points = new ArrayList<>();
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
@@ -73,7 +74,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dv = new DrawView(this);
-        presenter = new SettingsPresenter(this);
+        presenter = new ShowSlicePresenter(this);
         setContentView(dv);
 
         final Intent intent = getIntent();

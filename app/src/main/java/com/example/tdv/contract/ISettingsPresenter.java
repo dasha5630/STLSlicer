@@ -2,11 +2,11 @@ package com.example.tdv.contract;
 
 import java.io.InputStream;
 
-public interface IPresenter {
+public interface ISettingsPresenter {
     void fileReceived(InputStream in);
 
     void click();
 
-    void done();
+
 }
 
