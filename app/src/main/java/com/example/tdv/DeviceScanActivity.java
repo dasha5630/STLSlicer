@@ -17,7 +17,6 @@
 package com.example.tdv;
 
 import android.app.Activity;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -28,19 +27,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
+import android.widget.Button;
 
 import com.example.tdv.contract.IPresenter;
 import com.example.tdv.contract.IStartActivity;
-import com.example.tdv.repository.ble.DeviceControlActivity;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -53,6 +45,9 @@ public class DeviceScanActivity extends Activity implements View.OnClickListener
     private boolean mScanning;
     private Handler mHandler;
     IPresenter presenter;
+    Button next;
+    private String mDeviceName = "BT05";
+    private String mDeviceAddress;
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
@@ -64,13 +59,12 @@ public class DeviceScanActivity extends Activity implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        presenter = new Presenter(this);
+        next = findViewById(R.id.btnRead);
+        next.setEnabled(false);
+        presenter = new SettingsPresenter(this);
 
         Intent intent = getIntent();
         String action = intent.getAction();
-
-
 
         if (action.compareTo(Intent.ACTION_VIEW) == 0) {
             String scheme = intent.getScheme();
@@ -128,26 +122,7 @@ public class DeviceScanActivity extends Activity implements View.OnClickListener
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         }
-        // Initializes list view adapter.
-        scanLeDevice(true);
-    }
-
-    protected void foundMyDevice(BluetoothDevice device) {
-        if (device == null) return;
-        final Intent intent = new Intent(this, DeviceControlActivity.class);
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, "CyberX Beauty Mask");
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        startActivity(intent);
-    }
-
-    private void scanLeDevice(final boolean enable) {
-        if (enable) {
-            // Stops scanning after a pre-defined scan period.
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
-        } else {
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        }
+        mBluetoothAdapter.startLeScan(mLeScanCallback);
     }
 
     // Device scan callback.
@@ -162,9 +137,10 @@ public class DeviceScanActivity extends Activity implements View.OnClickListener
                             if(device != null
                                     && device.getAddress() != null
                                     && device.getName() != null
-                                    && (device.getAddress().equals("EB:52:75:EF:5D:89")
-                                    || device.getName().equals("CyberXmaskamaska")))
-                                foundMyDevice(device);
+                                    && device.getName().equals(mDeviceName)){
+                                next.setEnabled(true);
+                                mDeviceAddress = device.getAddress();
+                            }
                         }
                     });
                 }
@@ -177,7 +153,10 @@ public class DeviceScanActivity extends Activity implements View.OnClickListener
 
     @Override
     public void startNewActivity(Class o2) {
-        Intent intent = new Intent(this, o2);
+        final Intent intent = new Intent(this, ShowSliceActivity.class);
+        intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
+        intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
         startActivity(intent);
     }
 }

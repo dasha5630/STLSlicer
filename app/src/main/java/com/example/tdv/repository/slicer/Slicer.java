@@ -14,10 +14,10 @@ import java.util.Collections;
  */
 public class Slicer {
 
-    private  float numberOfTriangle;
-    private  ArrayList<Triangle> list;
-    private  ArrayList<Triangle> activeTriangleList;
-    private  ArrayList<Line> lines;
+    private float numberOfTriangle;
+    private ArrayList<Triangle> list;
+    private ArrayList<Triangle> activeTriangleList;
+    private ArrayList<Line> lines;
     private ArrayList<Point> points;
     private static  Slicer instance;
 

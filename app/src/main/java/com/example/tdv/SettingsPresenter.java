@@ -5,7 +5,6 @@ import android.graphics.Point;
 import com.example.tdv.contract.IPresenter;
 import com.example.tdv.contract.IStartActivity;
 import com.example.tdv.contract.IViewSlicerScreen;
-import com.example.tdv.repository.ble.BeaconService;
 import com.example.tdv.repository.slicer.Slicer;
 
 import java.io.InputStream;
@@ -14,18 +13,16 @@ import java.util.ArrayList;
 TODO make Path from 3DpointArray and return to View
 TODO make presenters for each activity
  */
-public class Presenter implements IPresenter {
+public class SettingsPresenter implements IPresenter {
     private IStartActivity mStartActivity;
     private IViewSlicerScreen mView;
     private Slicer slicer = Slicer.getInstance();
-    private BeaconService mBeaconService;
 
-
-    public Presenter(IViewSlicerScreen mView){
+    public SettingsPresenter(IViewSlicerScreen mView){
         this.mView = mView;
     }
 
-    public Presenter(IStartActivity mStartActivity){
+    public SettingsPresenter(IStartActivity mStartActivity){
         this.mStartActivity = mStartActivity;
     }
 
