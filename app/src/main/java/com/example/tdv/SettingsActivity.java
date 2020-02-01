@@ -33,6 +33,7 @@ import android.widget.Button;
 
 import com.example.tdv.contract.ISettingsPresenter;
 import com.example.tdv.contract.IStartActivity;
+import com.example.tdv.presenters.SettingsPresenter;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -40,7 +41,7 @@ import java.io.InputStream;
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
-public class DeviceScanActivity extends Activity implements View.OnClickListener, IStartActivity {
+public class SettingsActivity extends Activity implements View.OnClickListener, IStartActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;

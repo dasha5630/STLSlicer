@@ -21,15 +21,16 @@ public class Slicer {
     private ArrayList<Point> points;
     private static  Slicer instance;
 
-    private  Float currentZ;
+    public Float currentZ;
+    public Float step;
 
     private Slicer(){
         numberOfTriangle = 0;
         list = new ArrayList<>();
         activeTriangleList = new ArrayList<>();
         lines = new ArrayList<>();
-        currentZ = 5f;
         points = new ArrayList<>();
+        currentZ = 0f;
     }
 
     public static Slicer getInstance(){
@@ -39,8 +40,11 @@ public class Slicer {
         return instance;
     }
 
-    public ArrayList<Point> slicing(InputStream in){
+    public void readFile(InputStream in){
         ParseInputStream(in);
+    }
+
+    public ArrayList<Point> slice(){
         points = linesToPathPoints(slicingAlgorithm());
         return points;
     }

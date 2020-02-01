@@ -16,9 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.graphics.Point;
 
-import com.example.tdv.contract.ISettingsPresenter;
 import com.example.tdv.contract.IShowSlicePresenter;
 import com.example.tdv.contract.IViewSlicerScreen;
+import com.example.tdv.presenters.ShowSlicePresenter;
 
 public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 

@@ -1,8 +1,7 @@
-package com.example.tdv;
+package com.example.tdv.presenters;
 
 import android.graphics.Point;
 
-import com.example.tdv.contract.ISettingsPresenter;
 import com.example.tdv.contract.IShowSlicePresenter;
 import com.example.tdv.contract.IViewSlicerScreen;
 import com.example.tdv.repository.slicer.Slicer;
@@ -12,14 +11,22 @@ import java.util.ArrayList;
 public class ShowSlicePresenter implements IShowSlicePresenter {
     private IViewSlicerScreen mView;
     private Slicer slicer;
+    private Timer timer;
 
     public ShowSlicePresenter(IViewSlicerScreen mView){
         this.mView = mView;
         this.slicer = Slicer.getInstance();
+        this.timer = Timer.getInstance(this);
     }
 
     @Override
     public void done() {
+
+    }
+
+    @Override
+    public void timeOut() {
+        slicer.currentZ++;
         mView.showSlice(points3DToPoints2D(slicer.getPoints()));
     }
 

@@ -304,14 +304,13 @@ public class BluetoothLeService extends Service {
         boolean status1 = false;
 
         charac1 = Service.getCharacteristic(UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e"));
-        charac1.setValue(val);
-        status1 = mBluetoothGatt.writeCharacteristic(charac1);
-        Log.v("________BLESERVICE____", "___WRITE CHARATERISTICS STATUS:_________"+status1);
         if (charac1 == null) {
             Log.e(TAG, "char not found!");
             return false;
         }
-
+        charac1.setValue(val);
+        status1 = mBluetoothGatt.writeCharacteristic(charac1);
+        Log.v("________BLESERVICE____", "___WRITE CHARATERISTICS STATUS:_________"+status1);
         return status1;
     }
 
