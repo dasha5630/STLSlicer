@@ -2,13 +2,15 @@ package com.example.tdv.presenters;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 
 import androidx.annotation.Nullable;
 
 import com.example.tdv.contract.IShowSlicePresenter;
 
-public class Timer implements Runnable {
+public class Timer extends Handler {
 
     private long time;
     private long timeout;
@@ -27,12 +29,14 @@ public class Timer implements Runnable {
         return instance;
     }
     @Override
-    public void run() {
+    public void handleMessage(Message msg) {
         time = System.currentTimeMillis();
         if(timeout != 0 && ((time - setTimeoutTime) >= timeout)){
             iShowSlicePresenter.timeOut();
             setTimeoutTime = System.currentTimeMillis();
         }
+
+        sendEmptyMessageDelayed(-1, 100);
     }
 
     public void setTimeout(long timeout) {

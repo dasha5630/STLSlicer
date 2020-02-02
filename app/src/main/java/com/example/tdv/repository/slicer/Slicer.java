@@ -45,6 +45,7 @@ public class Slicer {
     }
 
     public ArrayList<Point> slice(){
+        points.clear();
         points = linesToPathPoints(slicingAlgorithm());
         return points;
     }
@@ -135,12 +136,14 @@ public class Slicer {
         float y = 0;
         float z = 0;
 
+        //error list
         for(Triangle it:list){
             if(it.getZToHigh().get(0).getZ() <= currentZ) {
                 if (it.getZToHigh().get(2).getZ() >= currentZ) {
-                    activeTriangleList.add(it);
+                    if(!activeTriangleList.contains(it))
+                        activeTriangleList.add(it);
                 } else {
-                    if(activeTriangleList.contains(it))
+                    if(activeTriangleList.contains(it)) //??? indexOf -> it.equal()
                         activeTriangleList.remove(it);
                 }
             }

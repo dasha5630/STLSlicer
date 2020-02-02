@@ -85,10 +85,11 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         step = intent.getFloatExtra("STEP", 0);
         time = intent.getFloatExtra("TIME", 10000);
 
+        presenter.setTime(time);
+        presenter.setStep(step);
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -127,13 +128,26 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
     @Override
     public void showSlice(ArrayList<Point> points) {
+        this.points.clear();
+        dv.invalidate();
         this.points.addAll(points);
+        dv.invalidate();
     }
 
+    @Override
+    public void writeToService(String characteristic, byte[] value) {
+        mBluetoothLeService.writeCharacteristic(characteristic, value);
+    }
+
+    @Override
+    public void writeToService(String characteristic, String value) {
+        mBluetoothLeService.writeCharacteristic(characteristic, value);
+    }
 
     public Context getContext(){
         return this.getApplicationContext();
     }
+
     class DrawView extends View {
 
         Paint p;

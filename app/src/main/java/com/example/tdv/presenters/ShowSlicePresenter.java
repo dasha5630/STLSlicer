@@ -12,15 +12,10 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
     private IViewSlicerScreen mView;
     private Slicer slicer;
     private Timer timer;
-    Thread thread;
 
     public ShowSlicePresenter(IViewSlicerScreen mView){
         this.mView = mView;
         this.slicer = Slicer.getInstance();
-        this.timer = Timer.getInstance(this);
-        thread = new Thread(timer);
-        thread.start();
-
     }
 
     @Override
@@ -29,13 +24,16 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
 
     @Override
     public void timeOut() {
-        slicer.currentZ++;
-        mView.showSlice(points3DToPoints2D(slicer.getPoints()));
+        slicer.currentZ += slicer.step;
+        mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb", slicer.currentZ.toString());
+        mView.showSlice(points3DToPoints2D(slicer.slice()));
     }
 
     @Override
     public void setTime(Float time) {
+        this.timer = Timer.getInstance(this);
         timer.setTimeout(time.longValue());
+        timer.sendEmptyMessageDelayed(-1, 100);
     }
 
     @Override
