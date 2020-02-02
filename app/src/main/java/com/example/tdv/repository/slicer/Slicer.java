@@ -162,8 +162,6 @@ public class Slicer {
                 float y2 = it.getZToHigh().get(2).getY();
                 float z2 = it.getZToHigh().get(2).getZ();
 
-
-
                 if(Float.compare(z1,z2) >= 0) continue;
 
                 float t = (currentZ - z1)/(z2 - z1);

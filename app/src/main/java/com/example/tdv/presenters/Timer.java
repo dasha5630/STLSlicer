@@ -35,7 +35,6 @@ public class Timer extends Handler {
             iShowSlicePresenter.timeOut();
             setTimeoutTime = System.currentTimeMillis();
         }
-
         sendEmptyMessageDelayed(-1, 100);
     }
 

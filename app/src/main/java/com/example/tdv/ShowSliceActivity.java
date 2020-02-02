@@ -22,9 +22,10 @@ import com.example.tdv.presenters.ShowSlicePresenter;
 
 public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
-    View dv;
-    IShowSlicePresenter presenter;
-    ArrayList<Point> points = new ArrayList<>();
+    private View dv;
+    private IShowSlicePresenter presenter;
+    private ArrayList<Point> points = new ArrayList<>();
+    private Path externalPath;
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -78,6 +79,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         dv = new DrawView(this);
         presenter = new ShowSlicePresenter(this);
         setContentView(dv);
+        externalPath = new Path();
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
@@ -127,10 +129,14 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     }
 
     @Override
-    public void showSlice(ArrayList<Point> points) {
-        this.points.clear();
+    public void showSlice(Path path) {
+        externalPath = path;
+        //this.points.addAll(points);
         dv.invalidate();
-        this.points.addAll(points);
+    }
+    @Override
+    public void clearScreen(){
+        this.points.clear();
         dv.invalidate();
     }
 
@@ -166,22 +172,14 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         @Override
         protected void onDraw(Canvas canvas) {
             canvas.drawARGB(0xff, 0, 0, 0);
-
+            path.reset();
+            path = externalPath;
             p1.setColor(Color.WHITE);
             p.setColor(Color.GREEN); //brush color
             p.setStrokeWidth(10); //brush size
             p.setStyle(Paint.Style.FILL);
 
-                if(!points.isEmpty()) {
-                    path.moveTo(points.get(0).x*100,points.get(0).y*100);
-                    for (Point it : points) {
-                        path.lineTo(it.x*100,it.y*100);
-                        canvas.drawPoint(it.x * 100, it.y * 100, p);
-                    }
-                    path.close();
-
-                    canvas.drawPath(path, p1);
-                }
+            canvas.drawPath(path, p1);
         }
 
     }
