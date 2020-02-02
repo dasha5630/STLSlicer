@@ -27,9 +27,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.tdv.contract.ISettingsPresenter;
 import com.example.tdv.contract.IStartActivity;
@@ -45,8 +48,10 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
-    ISettingsPresenter presenter;
-    Button next;
+    private ISettingsPresenter presenter;
+    private Button next;
+    private EditText step;
+    private EditText time;
     private String mDeviceName = "BT05";
     private String mDeviceAddress;
 
@@ -63,6 +68,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         next = findViewById(R.id.btnRead);
         next.setEnabled(false);
         presenter = new SettingsPresenter(this);
+
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -107,6 +113,26 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
             finish();
             return;
         }
+
+        step = findViewById(R.id.textStep);
+        step.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        time = findViewById(R.id.textTime);
+
 
     }
 
@@ -156,6 +182,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     public void startNewActivity(Class o2) {
         final Intent intent = new Intent(this, ShowSliceActivity.class);
         intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
+        intent.putExtra("STEP", Float.parseFloat(step.getText().toString()));
+        intent.putExtra("TIME", Float.parseFloat(time.getText().toString()));
         intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
         startActivity(intent);

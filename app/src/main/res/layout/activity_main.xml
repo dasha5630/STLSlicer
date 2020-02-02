@@ -5,16 +5,31 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/step" />
+    <EditText
+        android:id="@+id/textStep"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="number"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/time" />
+    <EditText
+        android:id="@+id/textTime"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="number"/>
+
     <Button
         android:id="@+id/btnRead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:onClick="onClick"
         android:text="@string/next" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 </LinearLayout>

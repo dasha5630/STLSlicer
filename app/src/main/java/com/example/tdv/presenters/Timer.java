@@ -29,8 +29,9 @@ public class Timer implements Runnable {
     @Override
     public void run() {
         time = System.currentTimeMillis();
-        if(time - setTimeoutTime >= timeout){
+        if(timeout != 0 && ((time - setTimeoutTime) >= timeout)){
             iShowSlicePresenter.timeOut();
+            setTimeoutTime = System.currentTimeMillis();
         }
     }
 

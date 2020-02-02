@@ -31,6 +31,8 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
     private String mDeviceName;
     private String mDeviceAddress;
+    private Float step;
+    private Float time;
     private BluetoothLeService mBluetoothLeService;
 
     private boolean mConnected = false;
@@ -80,6 +82,9 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
+        step = intent.getFloatExtra("STEP", 0);
+        time = intent.getFloatExtra("TIME", 10000);
+
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);

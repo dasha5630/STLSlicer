@@ -6,7 +6,5 @@ public interface ISettingsPresenter {
     void fileReceived(InputStream in);
 
     void click();
-
-
 }
 

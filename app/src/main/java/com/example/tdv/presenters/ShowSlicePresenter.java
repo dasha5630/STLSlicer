@@ -12,22 +12,35 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
     private IViewSlicerScreen mView;
     private Slicer slicer;
     private Timer timer;
+    Thread thread;
 
     public ShowSlicePresenter(IViewSlicerScreen mView){
         this.mView = mView;
         this.slicer = Slicer.getInstance();
         this.timer = Timer.getInstance(this);
+        thread = new Thread(timer);
+        thread.start();
+
     }
 
     @Override
     public void done() {
-
     }
 
     @Override
     public void timeOut() {
         slicer.currentZ++;
         mView.showSlice(points3DToPoints2D(slicer.getPoints()));
+    }
+
+    @Override
+    public void setTime(Float time) {
+        timer.setTimeout(time.longValue());
+    }
+
+    @Override
+    public void setStep(Float step) {
+        slicer.step = step;
     }
 
     private ArrayList<Point> points3DToPoints2D(ArrayList<com.example.tdv.repository.slicer.Point> points3D){
