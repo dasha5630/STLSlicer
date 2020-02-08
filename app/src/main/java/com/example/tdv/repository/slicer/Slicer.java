@@ -19,6 +19,8 @@ public class Slicer {
     private ArrayList<Triangle> activeTriangleList;
     private ArrayList<Line> lines;
     private ArrayList<Point> points;
+    private ArrayList<ArrayList<Point>> pointsFoPathArray;
+
     private static  Slicer instance;
 
     public Float currentZ;
@@ -30,6 +32,7 @@ public class Slicer {
         activeTriangleList = new ArrayList<>();
         lines = new ArrayList<>();
         points = new ArrayList<>();
+        pointsFoPathArray = new ArrayList<>();
         currentZ = 0f;
     }
 
@@ -44,10 +47,10 @@ public class Slicer {
         ParseInputStream(in);
     }
 
-    public ArrayList<Point> slice(){
-        points.clear();
-        points = linesToPathPoints(slicingAlgorithm());
-        return points;
+    public ArrayList<ArrayList<Point>> slice(){
+        pointsFoPathArray.clear();
+        pointsFoPathArray = linesToPathPoints(slicingAlgorithm());
+        return pointsFoPathArray;
     }
 
     public ArrayList<Point> getPoints() {
@@ -210,8 +213,9 @@ public class Slicer {
         return lines;
     }
 
-    private ArrayList<Point> linesToPathPoints(ArrayList<Line> lines){
-        if(!lines.isEmpty()){
+    private ArrayList<ArrayList<Point>> linesToPathPoints(ArrayList<Line> lines){
+        ArrayList<ArrayList<Point>> pointsFoPathArray = new ArrayList<>();
+        while (!lines.isEmpty()){
             ArrayList<Point> points = new ArrayList<>();
             Line line = lines.get(0);
             int size = lines.size();
@@ -235,10 +239,9 @@ public class Slicer {
                         break;
                     }
                 }
-
             }
-            return points;
+            pointsFoPathArray.add(points);
         }
-        return null;
+        return pointsFoPathArray;
     }
 }

@@ -55,16 +55,20 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
         slicer.step = step;
     }
 
-    private Path pointsToPath(ArrayList<Point> points) {
-        Path path = new Path();
-        if (!points.isEmpty()) {
-            path.moveTo(points.get(0).getX() * 100, points.get(0).getY() * 100);
-            for (Point it : points) {
-                path.lineTo(it.getX() * 100, it.getY() * 100);
+    private ArrayList<Path> pointsToPath(ArrayList<ArrayList<Point>> pointsArray) {
+        ArrayList<Path> paths = new ArrayList<>();
+        for(ArrayList<Point> points : pointsArray){
+            Path path = new Path();
+            if (!points.isEmpty()) {
+                path.moveTo(points.get(0).getX() * 100, points.get(0).getY() * 100);
+                for (Point it : points) {
+                    path.lineTo(it.getX() * 100, it.getY() * 100);
+                }
+                path.close();
             }
-            path.close();
+            paths.add(path);
         }
-        return path;
+        return paths;
     }
 
 /*    private ArrayList<Point> pointsToPath(ArrayList<com.example.tdv.repository.slicer.Point> points3D){

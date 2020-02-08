@@ -25,7 +25,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     private View dv;
     private IShowSlicePresenter presenter;
     private ArrayList<Point> points = new ArrayList<>();
-    private Path externalPath;
+    private ArrayList<Path> externalPaths;
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -79,7 +79,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         dv = new DrawView(this);
         presenter = new ShowSlicePresenter(this);
         setContentView(dv);
-        externalPath = new Path();
+        externalPaths = new ArrayList<Path>();
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
@@ -129,8 +129,8 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     }
 
     @Override
-    public void showSlice(Path path) {
-        externalPath = path;
+    public void showSlice(ArrayList<Path> paths) {
+        externalPaths = paths;
         //this.points.addAll(points);
         dv.invalidate();
     }
@@ -173,12 +173,13 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         protected void onDraw(Canvas canvas) {
             canvas.drawARGB(0xff, 0, 0, 0);
             path.reset();
-            path = externalPath;
             p1.setColor(Color.WHITE);
             p.setColor(Color.GREEN); //brush color
             p.setStrokeWidth(10); //brush size
             p.setStyle(Paint.Style.FILL);
-
+            for(Path eP : externalPaths){
+                path.op(path, eP, Path.Op.XOR);
+            }
             canvas.drawPath(path, p1);
         }
 

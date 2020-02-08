@@ -6,7 +6,7 @@ import android.graphics.Point;
 import java.util.ArrayList;
 
 public interface IViewSlicerScreen {
-    void showSlice(Path path);
+    void showSlice(ArrayList<Path> paths);
     void writeToService(String characteristic, byte[] value);
     void writeToService(String characteristic, String  value);
     void clearScreen();
