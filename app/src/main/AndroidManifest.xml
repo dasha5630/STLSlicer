@@ -45,6 +45,10 @@
                 <data android:pathPattern=".*\\..*\\.STL" />
                 <data android:pathPattern=".*\\..*\\..*\\.STL" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\.STL" />
+                <data android:pathPattern=".*\\.stl" />
+                <data android:pathPattern=".*\\..*\\.stl" />
+                <data android:pathPattern=".*\\..*\\..*\\.stl" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.stl" />
                 <!-- keep going if you need more -->
 
             </intent-filter>

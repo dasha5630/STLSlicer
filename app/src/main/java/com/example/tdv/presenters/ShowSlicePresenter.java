@@ -32,11 +32,11 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
         moveCounter++;
         if(moveCounter != 0 && (moveCounter % 2) == 0){
             slicer.currentZ += slicer.step;
-            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb", slicer.currentZ.toString());
+            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb","00000ffe1-0000-1000-8000-00805f9b34fb", slicer.currentZ.toString());
             mView.showSlice(pointsToPath(slicer.slice()));
             timer.setTimeout(sliceTime);
         } else {
-            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb", "10");
+            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb","0000ffe1-0000-1000-8000-00805f9b34fb", "10");
             mView.clearScreen();
             timer.setTimeout(preparationTime);
         }

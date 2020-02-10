@@ -72,7 +72,6 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         }
     };
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,22 +86,25 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         step = intent.getFloatExtra("STEP", 0);
         time = intent.getFloatExtra("TIME", 10000);
 
-        presenter.setTime(time);
-        presenter.setStep(step);
-
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.done();
+
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d("ble", "Connect request result=" + result);
         }
+
+        presenter.done();
+
+        presenter.setTime(time);
+        presenter.setStep(step);
     }
 
 
@@ -131,7 +133,6 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     @Override
     public void showSlice(ArrayList<Path> paths) {
         externalPaths = paths;
-        //this.points.addAll(points);
         dv.invalidate();
     }
     @Override
@@ -141,17 +142,13 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     }
 
     @Override
-    public void writeToService(String characteristic, byte[] value) {
-        mBluetoothLeService.writeCharacteristic(characteristic, value);
+    public void writeToService(String serviceUUID, String characteristicUUID, byte[] value) {
+        mBluetoothLeService.writeCharacteristic(serviceUUID, characteristicUUID, value);
     }
 
     @Override
-    public void writeToService(String characteristic, String value) {
-        mBluetoothLeService.writeCharacteristic(characteristic, value);
-    }
-
-    public Context getContext(){
-        return this.getApplicationContext();
+    public void writeToService(String serviceUUID, String characteristicUUID, String value) {
+        mBluetoothLeService.writeCharacteristic(serviceUUID, characteristicUUID, value);
     }
 
     class DrawView extends View {

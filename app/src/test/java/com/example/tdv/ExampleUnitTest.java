@@ -1,5 +1,7 @@
 package com.example.tdv;
 
+import com.example.tdv.repository.slicer.Slicer;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,4 +16,10 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void slice_test() {
+        assertEquals(4, 2 + 2);
+    }
+
 }

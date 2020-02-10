@@ -293,17 +293,17 @@ public class BluetoothLeService extends Service {
 
 
 
-    public boolean writeCharacteristic(String characteristic, byte[] val){
+    public boolean writeCharacteristic(String serviceUUID, String characteristicUUID, byte[] val){
         //check mBluetoothGatt is available
         if (mBluetoothGatt == null) {
             Log.e(TAG, "lost connection");
             return false;
         }
-        BluetoothGattService Service = mBluetoothGatt.getService(UUID.fromString(characteristic));
+        BluetoothGattService Service = mBluetoothGatt.getService(UUID.fromString(serviceUUID));
         BluetoothGattCharacteristic charac1 = null;
         boolean status1 = false;
 
-        charac1 = Service.getCharacteristic(UUID.fromString(characteristic));
+        charac1 = Service.getCharacteristic(UUID.fromString(characteristicUUID));
         if (charac1 == null) {
             Log.e(TAG, "char not found!");
             return false;
@@ -314,17 +314,17 @@ public class BluetoothLeService extends Service {
         return status1;
     }
 
-    public boolean writeCharacteristic(String characteristic, String val){
+    public boolean writeCharacteristic(String serviceUUID, String characteristicUUID,String val){
         //check mBluetoothGatt is available
         if (mBluetoothGatt == null) {
             Log.e(TAG, "lost connection");
             return false;
         }
-        BluetoothGattService Service = mBluetoothGatt.getService(UUID.fromString(characteristic));
+        BluetoothGattService Service = mBluetoothGatt.getService(UUID.fromString(serviceUUID));
         BluetoothGattCharacteristic charac1 = null;
         boolean status1 = false;
 
-        charac1 = Service.getCharacteristic(UUID.fromString(characteristic));
+        charac1 = Service.getCharacteristic(UUID.fromString(characteristicUUID));
         if (charac1 == null) {
             Log.e(TAG, "char not found!");
             return false;
