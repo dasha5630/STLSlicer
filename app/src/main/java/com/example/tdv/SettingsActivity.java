@@ -57,8 +57,37 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     private EditText time;
     private String mDeviceName = "BT05";
     private String mDeviceAddress;
+    private BluetoothLeService mBluetoothLeService;
 
     private static final int REQUEST_ENABLE_BT = 1;
+
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            if (!mBluetoothLeService.initialize()) {
+                Log.e("ble","Unable to initialize Bluetooth");
+            }
+            // Automatically connects to the device upon successful start-up initialization.
+            mBluetoothLeService.connect(mDeviceAddress);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+        }
+    };
+
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                deviceConnected();
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +101,6 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         String action = intent.getAction();
 
         if (action.compareTo(Intent.ACTION_VIEW) == 0) {
-            String scheme = intent.getScheme();
             ContentResolver resolver = getContentResolver();
             Uri uri = intent.getData();
             try {
@@ -110,6 +138,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
             finish();
             return;
         }
+
+
         step = findViewById(R.id.textStep);
         step.addTextChangedListener(new TextWatcher() {
             @Override
@@ -169,6 +199,31 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         mBluetoothAdapter.startLeScan(mLeScanCallback);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBluetoothLeService.disconnect();
+        unbindService(mServiceConnection);
+        mBluetoothLeService = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        presenter.click();
+    }
+
+    @Override
+    public void startNewActivity(Class o2) {
+        final Intent intent = new Intent(this, ShowSliceActivity.class);
+        intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
+        intent.putExtra("STEP", Float.parseFloat(step.getText().toString()));
+        intent.putExtra("TIME", Float.parseFloat(time.getText().toString()));
+        intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        startActivity(intent);
+    }
+
     // Device scan callback.
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
@@ -189,43 +244,6 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
                 }
             };
 
-    @Override
-    public void onClick(View v) {
-        presenter.click();
-    }
-
-
-    private BluetoothLeService mBluetoothLeService;
-
-    @Override
-    public void startNewActivity(Class o2) {
-        final Intent intent = new Intent(this, ShowSliceActivity.class);
-        intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_NAME, mDeviceName);
-        intent.putExtra("STEP", Float.parseFloat(step.getText().toString()));
-        intent.putExtra("TIME", Float.parseFloat(time.getText().toString()));
-        intent.putExtra(ShowSliceActivity.EXTRAS_DEVICE_ADDRESS, mDeviceAddress);
-        mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        startActivity(intent);
-    }
-
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-            if (!mBluetoothLeService.initialize()) {
-                Log.e("ble","Unable to initialize Bluetooth");
-            }
-            // Automatically connects to the device upon successful start-up initialization.
-            mBluetoothLeService.connect(mDeviceAddress);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService = null;
-        }
-    };
-
     void deviceFounded(BluetoothDevice device){
         mDeviceAddress = device.getAddress();
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
@@ -241,15 +259,6 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         presenter.deviceWasConnected(next);
     }
 
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                deviceConnected();
-            }
-        }
-    };
 
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -257,11 +266,5 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         return intentFilter;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mBluetoothLeService.disconnect();
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
-    }
+
 }

@@ -1,8 +1,13 @@
 package com.example.tdv;
 
-import com.example.tdv.repository.slicer.Slicer;
+import com.example.tdv.repository.slicer.STLParser;
 
 import org.junit.Test;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import static org.junit.Assert.*;
 
@@ -18,8 +23,11 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void slice_test() {
-        assertEquals(4, 2 + 2);
+    public void readFileTest() throws NullPointerException {
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream("test.STL");
+        STLParser.readFile(in);
+
+        assertEquals(4, STLParser.numberOfTriangle, 0.01);
     }
 
 }
