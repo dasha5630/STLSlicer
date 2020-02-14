@@ -1,13 +1,13 @@
 package com.example.tdv;
 
 import com.example.tdv.repository.slicer.STLParser;
+import com.example.tdv.repository.slicer.Slicer;
 
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+
 
 import static org.junit.Assert.*;
 

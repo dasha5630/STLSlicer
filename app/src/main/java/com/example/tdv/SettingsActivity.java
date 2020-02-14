@@ -30,7 +30,6 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,6 +37,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.tdv.contract.ISettingsPresenter;
 import com.example.tdv.contract.IStartActivity;
@@ -55,6 +55,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     private Button next;
     private EditText step;
     private EditText time;
+    private TextView deviceText;
     private String mDeviceName = "BT05";
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
@@ -118,7 +119,6 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
         }
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
@@ -139,6 +139,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
             return;
         }
 
+        deviceText = findViewById(R.id.device);
 
         step = findViewById(R.id.textStep);
         step.addTextChangedListener(new TextWatcher() {
@@ -161,6 +162,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
                 }
             }
         });
+
         time = findViewById(R.id.textTime);
         time.addTextChangedListener(new TextWatcher() {
             @Override
@@ -199,14 +201,6 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         mBluetoothAdapter.startLeScan(mLeScanCallback);
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mBluetoothLeService.disconnect();
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
-    }
 
     @Override
     public void onClick(View v) {
@@ -249,6 +243,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        deviceText.setText("device found!");
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d("ble", "Connect request result=" + result);
@@ -256,6 +251,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     }
 
     void deviceConnected(){
+        deviceText.setText("device connected");
         presenter.deviceWasConnected(next);
     }
 

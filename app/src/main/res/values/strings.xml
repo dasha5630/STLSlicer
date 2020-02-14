@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Stl Reader</string>
     <string name="next">next</string>
-    <string name="step">set step</string>
-    <string name="time">set time</string>
+    <string name="step">set step, mm</string>
+    <string name="time">set time (>1000) , ms</string>
+    <string name="device">finding device...</string>
 </resources>

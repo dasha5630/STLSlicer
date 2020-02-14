@@ -9,11 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/step" />
+
     <EditText
         android:id="@+id/textStep"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:inputType="number"/>
+        android:layout_height="wrap_content"
+        android:inputType="number|numberDecimal" />
 
     <TextView
         android:layout_width="match_parent"
@@ -24,6 +25,12 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:inputType="number"/>
+
+    <TextView
+        android:id="@+id/device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/device" />
 
     <Button
         android:id="@+id/btnRead"

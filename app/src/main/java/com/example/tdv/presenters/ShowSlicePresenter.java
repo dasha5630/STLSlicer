@@ -36,7 +36,8 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
             mView.showSlice(pointsToPath(slicer.slice()));
             timer.setTimeout(sliceTime);
         } else {
-            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb","0000ffe1-0000-1000-8000-00805f9b34fb", "10");
+            Float emptyStep = slicer.currentZ + 10;
+            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb","0000ffe1-0000-1000-8000-00805f9b34fb", emptyStep.toString());
             mView.clearScreen();
             timer.setTimeout(preparationTime);
         }
@@ -71,15 +72,4 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
         return paths;
     }
 
-/*    private ArrayList<Point> pointsToPath(ArrayList<com.example.tdv.repository.slicer.Point> points3D){
-        if(points3D == null){
-            throw new IllegalArgumentException("points3D null");
-        }
-        ArrayList<Point> points2D = new ArrayList<>();
-
-        for(com.example.tdv.repository.slicer.Point p: points3D){
-            points2D.add(new Point(Math.round(p.getX()), Math.round(p.getY())));
-        }
-        return points2D;
-    }*/
 }

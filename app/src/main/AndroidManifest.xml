@@ -62,6 +62,7 @@
             android:enabled="true"
             android:exported="false" />
 
+        <uses-library android:name="android.test.runner" />
     </application>
 
 </manifest>

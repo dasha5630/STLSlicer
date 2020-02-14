@@ -117,6 +117,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mBluetoothLeService.disconnect();
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
     }
