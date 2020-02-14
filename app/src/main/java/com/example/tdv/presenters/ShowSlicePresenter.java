@@ -10,6 +10,8 @@ import com.example.tdv.repository.slicer.Slicer;
 import java.util.ArrayList;
 
 public class ShowSlicePresenter implements IShowSlicePresenter {
+    private final String serviceUUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
+    private final String characteristicUUID = "00000ffe1-0000-1000-8000-00805f9b34fb";
     private IViewSlicerScreen mView;
     private Slicer slicer;
     private Timer timer;
@@ -25,6 +27,7 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
 
     @Override
     public void done() {
+        mView.writeToService(serviceUUID,characteristicUUID, "M17");
     }
 
     @Override
@@ -32,12 +35,12 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
         moveCounter++;
         if(moveCounter != 0 && (moveCounter % 2) == 0){
             slicer.currentZ += slicer.step;
-            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb","00000ffe1-0000-1000-8000-00805f9b34fb", slicer.currentZ.toString());
+            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + slicer.currentZ.toString());
             mView.showSlice(pointsToPath(slicer.slice()));
             timer.setTimeout(sliceTime);
         } else {
             Float emptyStep = slicer.currentZ + 10;
-            mView.writeToService("0000ffe0-0000-1000-8000-00805f9b34fb","0000ffe1-0000-1000-8000-00805f9b34fb", emptyStep.toString());
+            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + emptyStep.toString());
             mView.clearScreen();
             timer.setTimeout(preparationTime);
         }

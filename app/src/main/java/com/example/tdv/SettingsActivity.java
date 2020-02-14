@@ -157,6 +157,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
             public void afterTextChanged(Editable s) {
                 try{
                     presenter.stepChanged(Float.parseFloat(step.getText().toString()), next);
+                    next.setEnabled(true);
                 } catch (NumberFormatException e) {
                     next.setEnabled(false);
                 }

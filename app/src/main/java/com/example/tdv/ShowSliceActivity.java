@@ -36,9 +36,6 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     private Float time;
     private BluetoothLeService mBluetoothLeService;
 
-    private boolean mConnected = false;
-
-
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -54,21 +51,6 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             mBluetoothLeService = null;
-        }
-    };
-
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                mConnected = true;
-            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                mConnected = false;
-            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-
-            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-            }
         }
     };
 
@@ -94,41 +76,9 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     @Override
     protected void onResume() {
         super.onResume();
-
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d("ble", "Connect request result=" + result);
-        }
-
         presenter.done();
-
         presenter.setTime(time);
         presenter.setStep(step);
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mBluetoothLeService.disconnect();
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
-    }
-
-    private static IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
-        return intentFilter;
     }
 
     @Override
@@ -136,6 +86,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         externalPaths = paths;
         dv.invalidate();
     }
+
     @Override
     public void clearScreen(){
         this.points.clear();
