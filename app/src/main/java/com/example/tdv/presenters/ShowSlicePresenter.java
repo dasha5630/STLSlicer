@@ -18,16 +18,22 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
     private long sliceTime;
     private long preparationTime;
     private long moveCounter;
+    private final long  moveToPointTime = 5000;
 
     public ShowSlicePresenter(IViewSlicerScreen mView){
         this.mView = mView;
         this.slicer = Slicer.getInstance();
-        this.preparationTime = 1000;
+        this.preparationTime = 10000;
     }
 
     @Override
-    public void done() {
-        mView.writeToService(serviceUUID,characteristicUUID, "M17");
+    public void onDestroy() {
+        timer.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public void serviceConnected() {
+        mView.writeToService(serviceUUID,characteristicUUID, "M17\r\nG28\r\n");
     }
 
     @Override
@@ -35,14 +41,14 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
         moveCounter++;
         if(moveCounter != 0 && (moveCounter % 2) == 0){
             slicer.currentZ += slicer.step;
-            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + slicer.currentZ.toString());
+            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + slicer.currentZ.toString() + "\r\n");
             mView.showSlice(pointsToPath(slicer.slice()));
-            timer.setTimeout(sliceTime);
+            timer.setTimeout(sliceTime + moveToPointTime);
         } else {
             Float emptyStep = slicer.currentZ + 10;
-            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + emptyStep.toString());
+            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + emptyStep.toString() + "\r\n");
             mView.clearScreen();
-            timer.setTimeout(preparationTime);
+            timer.setTimeout(moveToPointTime);
         }
     }
 
@@ -50,7 +56,7 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
     public void setTime(Float time) {
         this.sliceTime = time.longValue();
         this.timer = Timer.getInstance(this);
-        timer.setTimeout(time.longValue());
+        timer.setTimeout(preparationTime);
         timer.sendEmptyMessageDelayed(-1, 100);
     }
 
@@ -64,9 +70,9 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
         for(ArrayList<Point> points : pointsArray){
             Path path = new Path();
             if (!points.isEmpty()) {
-                path.moveTo(points.get(0).getX() * 100, points.get(0).getY() * 100);
+                path.moveTo(points.get(0).getX(), points.get(0).getY());
                 for (Point it : points) {
-                    path.lineTo(it.getX() * 100, it.getY() * 100);
+                    path.lineTo(it.getX(), it.getY());
                 }
                 path.close();
             }

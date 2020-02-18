@@ -9,10 +9,6 @@ import com.example.tdv.repository.slicer.STLParser;
 
 import java.io.InputStream;
 
-/*
-TODO make Path from 3DpointArray and return to View
-TODO make presenters for each activity
- */
 public class SettingsPresenter implements ISettingsPresenter {
     private IStartActivity mStartActivity;
     boolean deviceWasConnected = false;

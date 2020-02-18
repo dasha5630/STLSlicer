@@ -46,6 +46,10 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
             }
             // Automatically connects to the device upon successful start-up initialization.
             mBluetoothLeService.connect(mDeviceAddress);
+
+            presenter.serviceConnected();
+            presenter.setTime(time);
+            presenter.setStep(step);
         }
 
         @Override
@@ -70,15 +74,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        presenter.done();
-        presenter.setTime(time);
-        presenter.setStep(step);
+       // presenter.done();
     }
 
     @Override
@@ -91,6 +87,15 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
     public void clearScreen(){
         this.points.clear();
         dv.invalidate();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+        mBluetoothLeService.disconnect();
+        unbindService(mServiceConnection);
+        mBluetoothLeService = null;
     }
 
     @Override
@@ -109,11 +114,9 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         Rect rect;
         Path path;
 
-        Paint p1;
         public DrawView(Context context) {
             super(context);
             p = new Paint();
-            p1 = new Paint();
             rect = new Rect();
             path = new Path();
         }
@@ -122,14 +125,13 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
         protected void onDraw(Canvas canvas) {
             canvas.drawARGB(0xff, 0, 0, 0);
             path.reset();
-            p1.setColor(Color.WHITE);
-            p.setColor(Color.GREEN); //brush color
+            p.setColor(Color.WHITE); //brush color
             p.setStrokeWidth(10); //brush size
             p.setStyle(Paint.Style.FILL);
             for(Path eP : externalPaths){
                 path.op(path, eP, Path.Op.XOR);
             }
-            canvas.drawPath(path, p1);
+            canvas.drawPath(path, p);
         }
 
     }

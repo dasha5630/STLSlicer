@@ -1,17 +1,8 @@
 package com.example.tdv.repository.slicer;
 
-import android.util.Log;
-
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/*
- TODO:
-  make it class with singleton pattern
- */
 public class Slicer {
 
     private ArrayList<Triangle> trianglesList;
