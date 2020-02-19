@@ -74,7 +74,6 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-       // presenter.done();
     }
 
     @Override

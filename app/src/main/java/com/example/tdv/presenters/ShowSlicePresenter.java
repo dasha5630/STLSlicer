@@ -33,30 +33,35 @@ public class ShowSlicePresenter implements IShowSlicePresenter {
 
     @Override
     public void serviceConnected() {
-        mView.writeToService(serviceUUID,characteristicUUID, "M17\r\nG28\r\n");
+        mView.writeToService(serviceUUID,characteristicUUID, "M17\r\n");
     }
 
     @Override
     public void timeOut() {
-        moveCounter++;
-        if(moveCounter != 0 && (moveCounter % 2) == 0){
-            slicer.currentZ += slicer.step;
-            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + slicer.currentZ.toString() + "\r\n");
-            mView.showSlice(pointsToPath(slicer.slice()));
-            timer.setTimeout(sliceTime + moveToPointTime);
+        if(moveCounter == 0){
+            mView.writeToService(serviceUUID,characteristicUUID, "G28\r\n");
+            timer.setTimeout(preparationTime);
         } else {
-            Float emptyStep = slicer.currentZ + 10;
-            mView.writeToService(serviceUUID,characteristicUUID, "G1 Z" + emptyStep.toString() + "\r\n");
-            mView.clearScreen();
-            timer.setTimeout(moveToPointTime);
+            if ((moveCounter % 2) == 0) {
+                slicer.currentZ += slicer.step;
+                mView.writeToService(serviceUUID, characteristicUUID, "G1 Z" + slicer.currentZ.toString() + "\r\n");
+                mView.showSlice(pointsToPath(slicer.slice()));
+                timer.setTimeout(sliceTime + moveToPointTime);
+            } else {
+                Float emptyStep = slicer.currentZ + 10;
+                mView.writeToService(serviceUUID, characteristicUUID, "G1 Z" + emptyStep.toString() + "\r\n");
+                mView.clearScreen();
+                timer.setTimeout(moveToPointTime);
+            }
         }
+        moveCounter++;
     }
 
     @Override
     public void setTime(Float time) {
         this.sliceTime = time.longValue();
         this.timer = Timer.getInstance(this);
-        timer.setTimeout(preparationTime);
+        timer.setTimeout(1000);
         timer.sendEmptyMessageDelayed(-1, 100);
     }
 
