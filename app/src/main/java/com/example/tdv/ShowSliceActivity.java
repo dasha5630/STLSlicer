@@ -84,7 +84,7 @@ public class ShowSliceActivity extends Activity implements IViewSlicerScreen {
 
     @Override
     public void clearScreen(){
-        this.points.clear();
+        externalPaths.clear();
         dv.invalidate();
     }
 

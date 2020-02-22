@@ -54,14 +54,13 @@ public class Slicer {
         float y = 0;
         float z = 0;
 
-        //error list
         for(Triangle it:trianglesList){
             if(it.getZToHigh().get(0).getZ() <= currentZ) {
                 if (it.getZToHigh().get(2).getZ() >= currentZ) {
                     if(!activeTriangleList.contains(it))
                         activeTriangleList.add(it);
                 } else {
-                    if(activeTriangleList.contains(it)) //??? indexOf -> it.equal()
+                    if(activeTriangleList.contains(it))
                         activeTriangleList.remove(it);
                 }
             }
