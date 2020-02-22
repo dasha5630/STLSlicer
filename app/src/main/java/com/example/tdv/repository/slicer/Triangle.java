@@ -1,7 +1,6 @@
-package com.example.tdv.slicing;
+package com.example.tdv.repository.slicer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class Triangle implements Comparable{
